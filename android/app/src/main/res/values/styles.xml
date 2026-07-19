@@ -13,10 +13,19 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
+        <!-- The game is dark-only. Without this the DayNight parent paints a white
+             window, which shows through as a white strip behind the status bar
+             (targetSdk 36 enforces edge-to-edge, so statusBarColor is ignored). -->
+        <item name="android:windowBackground">@color/brandBackground</item>
+        <!-- false = light icons, legible on the dark background. -->
+        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <!-- Hand back to the dark app theme once the splash finishes. -->
+        <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 </resources>
