@@ -82,7 +82,7 @@ güncelleriz.
 
 Gizlilikle ilgili sorularınız veya veri silme talepleriniz için:
 
-**E-posta:** `BURAYA_İLETİŞİM_ADRESİ_YAZIN`
+**E-posta:** thcmnai@gmail.com
 
 ---
 ---
@@ -166,4 +166,4 @@ If this policy changes we will update this page and the "Last updated" date abov
 
 For privacy questions or deletion requests:
 
-**Email:** `PUT_YOUR_CONTACT_ADDRESS_HERE`
+**Email:** thcmnai@gmail.com
