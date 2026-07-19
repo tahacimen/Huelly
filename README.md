@@ -41,6 +41,46 @@ The CLI build needs `JAVA_HOME` set to Android Studio's bundled JDK
 > socket there. Point `TMP`/`TEMP` at a normal path (e.g. `C:\Temp`) and it
 > builds fine. Android Studio is unaffected; it uses the full path.
 
+## Release build (Play Store)
+
+### One-time: create the signing key
+
+Google Play identifies the app by this key forever. **Back the `.jks` file up
+offline — if you lose it you can never update this app again.**
+
+```bash
+keytool -genkeypair -v \
+  -keystore android/huely-release.jks \
+  -alias huely -keyalg RSA -keysize 2048 -validity 10000
+```
+
+`keytool` ships with the JDK; on this machine it is at
+`C:\Program Files\Android\Android Studio\jbr\bin\keytool.exe`. Android Studio can
+also do this via **Build → Generate Signed Bundle / APK → Create new…**.
+
+Then record the passwords where Gradle can find them:
+
+```bash
+cp android/keystore.properties.example android/keystore.properties
+# fill in storePassword, keyAlias, keyPassword
+```
+
+`keystore.properties` and `*.jks` are gitignored — they must never be committed.
+
+### Build the artifact
+
+```bash
+cd android
+./gradlew bundleRelease     # -> app/build/outputs/bundle/release/app-release.aab
+```
+
+Play Store wants the `.aab`. `./gradlew assembleRelease` produces an APK instead,
+useful for sideloading. Without `keystore.properties` both still build, but the
+output is unsigned and Play will reject it.
+
+Bump `versionCode` (and usually `versionName`) in `android/app/build.gradle`
+before every upload — Play rejects a `versionCode` it has already seen.
+
 ## Tech notes
 
 - **Storage** is layered so progress survives everywhere: `window.storage` (Claude

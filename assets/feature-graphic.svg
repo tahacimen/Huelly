@@ -1,0 +1,57 @@
+<svg width="1024" height="500" viewBox="0 0 1024 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Play Store feature graphic (required size: 1024x500).
+       Keep the important content away from the edges — the store crops this
+       differently across surfaces. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#121220"/>
+      <stop offset="1" stop-color="#232340"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF5C6A"/><stop offset="1" stop-color="#E03444"/>
+    </linearGradient>
+    <linearGradient id="orange" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFB733"/><stop offset="1" stop-color="#E08900"/>
+    </linearGradient>
+    <linearGradient id="yellow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE45F"/><stop offset="1" stop-color="#E8C21F"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4AE28A"/><stop offset="1" stop-color="#1FB85E"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4FA8FF"/><stop offset="1" stop-color="#1877D6"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="500" fill="url(#bg)"/>
+
+  <!-- falling strip, echoing the icon -->
+  <g>
+    <rect x="96"  y="150" width="92" height="200" rx="24" fill="url(#red)"/>
+    <rect x="204" y="150" width="92" height="200" rx="24" fill="url(#yellow)"/>
+    <rect x="312" y="150" width="92" height="200" rx="24" fill="url(#green)"/>
+  </g>
+
+  <!-- wordmark -->
+  <text x="470" y="248"
+        font-family="Segoe UI, Arial, Helvetica, sans-serif"
+        font-size="96" font-weight="bold" letter-spacing="4">
+    <tspan fill="#F2F0FF">HUE</tspan><tspan fill="#FFDD3C">LY</tspan>
+  </text>
+
+  <text x="472" y="306"
+        font-family="Segoe UI, Arial, Helvetica, sans-serif"
+        font-size="30" fill="#8E8CB0" letter-spacing="1">
+    Renk kodunu yakala, eşleştir, ateşle
+  </text>
+
+  <!-- palette dots -->
+  <g>
+    <rect x="472" y="344" width="26" height="26" rx="8" fill="url(#red)"/>
+    <rect x="510" y="344" width="26" height="26" rx="8" fill="url(#orange)"/>
+    <rect x="548" y="344" width="26" height="26" rx="8" fill="url(#yellow)"/>
+    <rect x="586" y="344" width="26" height="26" rx="8" fill="url(#green)"/>
+    <rect x="624" y="344" width="26" height="26" rx="8" fill="url(#blue)"/>
+  </g>
+</svg>
