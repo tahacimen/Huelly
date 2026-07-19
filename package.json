@@ -1,0 +1,21 @@
+{
+  "name": "proje-baglanti-durumu-2cf0c0",
+  "version": "1.0.0",
+  "description": "Hyper-casual color sequence matching game. Single-file HTML/CSS/JS prototype — no build step required.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@capacitor/android": "^8.4.2",
+    "@capacitor/cli": "^8.4.2",
+    "@capacitor/core": "^8.4.2"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}

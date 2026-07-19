@@ -1,0 +1,29 @@
+<svg width="2732" height="2732" viewBox="0 0 2732 2732" xmlns="http://www.w3.org/2000/svg">
+  <!-- Huely splash: same mark on the app background. Kept well inside the
+       centre because splash images get cropped hard on odd aspect ratios.
+       No text — the wordmark would depend on a font being present at
+       rasterisation time, and the mark alone is already on-brand. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#121220"/>
+      <stop offset="1" stop-color="#1B1B30"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF5C6A"/><stop offset="1" stop-color="#E03444"/>
+    </linearGradient>
+    <linearGradient id="yellow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE45F"/><stop offset="1" stop-color="#E8C21F"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4AE28A"/><stop offset="1" stop-color="#1FB85E"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="2732" height="2732" fill="url(#bg)"/>
+
+  <g>
+    <rect x="829"  y="1046" width="326" height="640" rx="80" fill="url(#red)"/>
+    <rect x="1203" y="1046" width="326" height="640" rx="80" fill="url(#yellow)"/>
+    <rect x="1577" y="1046" width="326" height="640" rx="80" fill="url(#green)"/>
+  </g>
+</svg>

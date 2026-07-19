@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand palette, mirroring the CSS custom properties in www/index.html. -->
+    <color name="brandBackground">#121220</color>
+    <color name="brandAccent">#FFDD3C</color>
+
+    <!-- Referenced by AppTheme; the game is dark-only, so these follow the brand. -->
+    <color name="colorPrimary">#121220</color>
+    <color name="colorPrimaryDark">#121220</color>
+    <color name="colorAccent">#FFDD3C</color>
+</resources>

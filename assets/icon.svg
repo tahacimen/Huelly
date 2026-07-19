@@ -1,0 +1,27 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- Huely app icon: the falling colour strip, the game's core visual.
+       Artwork sits inside the central 672px adaptive-icon safe zone. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#121220"/>
+      <stop offset="1" stop-color="#1B1B30"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF5C6A"/><stop offset="1" stop-color="#E03444"/>
+    </linearGradient>
+    <linearGradient id="yellow" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE45F"/><stop offset="1" stop-color="#E8C21F"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4AE28A"/><stop offset="1" stop-color="#1FB85E"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+
+  <g>
+    <rect x="176" y="312" width="204" height="400" rx="50" fill="url(#red)"/>
+    <rect x="410" y="312" width="204" height="400" rx="50" fill="url(#yellow)"/>
+    <rect x="644" y="312" width="204" height="400" rx="50" fill="url(#green)"/>
+  </g>
+</svg>
