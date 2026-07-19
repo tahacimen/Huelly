@@ -737,27 +737,43 @@ function fire(){
 /* ---------- end / quit ---------- */
 $('btn-quit').onclick = () => { if(G){ G.running=false; G=null; } show('levels'); };
 
-async function endGame(won){
+/* `survived` = the clock ran out with lives to spare. That alone is not enough
+   to clear a level: on Slow the early levels hand out more lives than there are
+   strips, so idling through level 1 without a single tap used to count as a win.
+   Clearing also requires landing at least one match. */
+async function endGame(survived){
   G.running = false;
   const {lvl, diff, score} = G;
   const key = lvl+':'+diff;
+  const won = survived && score > 0;
 
   $('result-title').textContent = won ? 'Seviye tamam!' : 'Oyun bitti';
   $('result-title').style.color = won ? 'var(--good)' : 'var(--bad)';
   $('result-sub').textContent = won
     ? `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · süreyi tamamladın`
-    : `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · canın bitti`;
+    : survived
+      ? `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · hiç eşleştirme yapmadın`
+      : `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · canın bitti`;
   $('result-score').textContent = score.toLocaleString();
 
   let bestNote = '';
   if (adminMode){
     bestNote = 'Yönetici testi — skor kaydedilmez veya sıralanmaz.';
   } else if (won){
-    const prev = player.best[key] ?? 0;
-    if (score > prev){ player.best[key] = score; bestNote = prev ? 'Yeni rekor! (önceki: '+prev+')' : 'Yeni rekor!'; }
-    else bestNote = 'En iyi: ' + prev;
+    // Compare against null, not 0: `?? 0` meant a first clear worth 0 points
+    // failed the `score > prev` test and was never recorded, so the level stayed
+    // star-less and still read "no scores yet".
+    const prev = player.best[key];
+    if (prev == null || score > prev){
+      player.best[key] = score;
+      bestNote = prev != null ? 'Yeni rekor! (önceki: '+prev+')' : 'Yeni rekor!';
+    } else {
+      bestNote = 'En iyi: ' + prev;
+    }
     if (lvl >= player.unlocked && lvl < CONFIG.LEVEL_COUNT) player.unlocked = lvl + 1;
     await savePlayer();
+  } else if (survived){
+    bestNote = 'Seviyeyi geçmek için en az bir eşleştirme yapmalısın.';
   } else {
     bestNote = player.best[key] != null ? 'En iyi: ' + player.best[key] : 'Skorunu kaydetmek için süreyi tamamla.';
   }
