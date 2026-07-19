@@ -60,7 +60,11 @@ The CLI build needs `JAVA_HOME` set to Android Studio's bundled JDK
 - [x] Persistent local storage (works off-Claude / on Android)
 - [x] Real global leaderboard (Supabase)
 - [x] Capacitor wrap for Android APK
-- [ ] Branding pass (icon, splash — still Capacitor defaults)
-- [ ] Release signing key + Play Store listing
-- [ ] Balance tuning (Extreme tier at high levels is near-impossible:
-      level 33 leaves ~0.31s per block)
+- [x] Branding pass (icon, splash, dark system bars)
+- [x] Balance tuning (fall time now scales with sequence length)
+- [x] Privacy policy drafted (`PRIVACY.md`)
+- [ ] Fill in the contact address in `PRIVACY.md` and host it at a public URL
+      (Play Console requires one)
+- [ ] Release signing key — must be created by the developer, then wire up
+      `signingConfigs` reading from a gitignored `keystore.properties`
+- [ ] Play Console listing (screenshots, description, content rating)
