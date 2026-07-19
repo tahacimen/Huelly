@@ -102,9 +102,16 @@ before every upload — Play rejects a `versionCode` it has already seen.
 - [x] Capacitor wrap for Android APK
 - [x] Branding pass (icon, splash, dark system bars)
 - [x] Balance tuning (fall time now scales with sequence length)
-- [x] Privacy policy drafted (`PRIVACY.md`)
-- [ ] Fill in the contact address in `PRIVACY.md` and host it at a public URL
-      (Play Console requires one)
-- [ ] Release signing key — must be created by the developer, then wire up
-      `signingConfigs` reading from a gitignored `keystore.properties`
-- [ ] Play Console listing (screenshots, description, content rating)
+- [x] Privacy policy (`PRIVACY.md`, served from `docs/` via GitHub Pages)
+- [x] Release signing wired to a gitignored `keystore.properties`
+- [x] Store listing assets and copy (`store/`)
+
+Left to do, all of it needing the developer rather than the code:
+
+- [ ] Merge to `main` so GitHub Pages serves the policy at
+      <https://tahacimen.github.io/Huely/> (Pages is already configured)
+- [ ] Create the release keystore (`keytool`), fill in `keystore.properties`,
+      and back the `.jks` up offline — losing it means never updating the app
+- [ ] Google Play Console account, then upload the `.aab` and the `store/` assets
+- [ ] Optional: retake the gameplay screenshots by hand — the automated ones
+      show a low score
