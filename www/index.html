@@ -344,10 +344,19 @@ const CONFIG = {
   SPEED_BOOSTS: [1, 1.5, 2, 3],
 
   // Per-level scaling
-  seqLen:    lvl => Math.min(3 + Math.floor((lvl - 1) / 5), 10),      // blocks in the strip: 3 → 10
+  // Capped at 7: past that the strip stops testing reactions and just
+  // overruns working memory, which tops out around 7 items.
+  seqLen:    lvl => Math.min(3 + Math.floor((lvl - 1) / 6), 7),        // blocks in the strip: 3 → 7
   colorCount:(lvl, d) => Math.min(3 + Math.floor((lvl - 1) / 8) + CONFIG.DIFFS[d].extraColors, 7),
   levelTime: lvl => 30 + Math.min(lvl, 15),                            // seconds to survive: 31 → 45
-  fallTime:  (lvl, d) => Math.max(16 - lvl * 0.3, 6) / CONFIG.DIFFS[d].speed, // seconds top→bottom
+
+  // Seconds allowed per block, before the difficulty speed multiplier.
+  perBlockTime: lvl => Math.max(2.2 - lvl * 0.035, 1.1),
+  // Fall time scales WITH the sequence length. Previously it shrank while the
+  // strip grew, so a longer strip was punished twice and level 33 Extreme left
+  // 0.31s per block — unplayable. Tying the two together keeps the curve fair.
+  fallTime:  (lvl, d) =>
+    CONFIG.seqLen(lvl) * CONFIG.perBlockTime(lvl) / CONFIG.DIFFS[d].speed,   // seconds top→bottom
 
   // Scoring: (20 + 80 × heightFraction) × diffMult × levelBonus
   points: (heightFrac, lvl, d) =>
