@@ -1,8 +1,8 @@
-# Huely — Gizlilik Politikası
+# Huelly — Gizlilik Politikası
 
 **Son güncelleme:** 20 Temmuz 2026
 
-Bu politika, **Huely** mobil oyununun hangi verileri topladığını ve nasıl
+Bu politika, **Huelly** mobil oyununun hangi verileri topladığını ve nasıl
 kullandığını açıklar. Kısa versiyonu: oyunun çalışması için gereken en az
 veriyi topluyoruz — bir takma ad ve toplam skorunuz. Başka hiçbir şey.
 
@@ -22,7 +22,7 @@ hız tercihiniz) **yalnızca kendi cihazınızda** saklanır ve sunucuya gönder
 
 ## 2. Toplamadığımız veriler
 
-Huely şunların **hiçbirini** toplamaz:
+Huelly şunların **hiçbirini** toplamaz:
 
 - Ad, soyad, e-posta, telefon numarası veya posta adresi
 - Konum bilgisi
@@ -69,7 +69,7 @@ düzeltilmesini veya silinmesini isteme hakkına sahipsiniz.
 
 ## 7. Çocukların gizliliği
 
-Huely bilinçli olarak 13 yaşın altındaki çocuklardan kişisel veri toplamaz.
+Huelly bilinçli olarak 13 yaşın altındaki çocuklardan kişisel veri toplamaz.
 Zaten oyunun topladığı tek bilgi, kullanıcının kendi seçtiği ve gerçek kimlik
 içermesi gerekmeyen bir takma addır.
 
@@ -87,11 +87,11 @@ Gizlilikle ilgili sorularınız veya veri silme talepleriniz için:
 ---
 ---
 
-# Huely — Privacy Policy
+# Huelly — Privacy Policy
 
 **Last updated:** 20 July 2026
 
-This policy explains what data the **Huely** mobile game collects and how it is
+This policy explains what data the **Huelly** mobile game collects and how it is
 used. In short: we collect the minimum the game needs to work — a nickname and
 your total score. Nothing else.
 
@@ -109,7 +109,7 @@ stored **only on your own device** and is never sent to the server.
 
 ## 2. What we do not collect
 
-Huely collects **none** of the following:
+Huelly collects **none** of the following:
 
 - Name, surname, email, phone number, or postal address
 - Location data
@@ -154,7 +154,7 @@ correct, or delete your data.
 
 ## 7. Children's privacy
 
-Huely does not knowingly collect personal data from children under 13. The only
+Huelly does not knowingly collect personal data from children under 13. The only
 information the game collects is a self-chosen nickname that need not contain any
 real identity.
 

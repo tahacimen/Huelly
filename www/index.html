@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Huely</title>
+<title>Huelly</title>
 <style>
 /* ============================================================
-   HUELY — hyper-casual color sequence shooter
+   HUELLY — hyper-casual color sequence shooter
    Single-file prototype. All tunable values live in CONFIG
    at the top of the <script> below.
    ============================================================ */
@@ -232,7 +232,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
       <span style="background:#FFDD3C"></span><span style="background:#2ED573"></span>
       <span style="background:#1E90FF"></span>
     </div>
-    <div class="brand">Hue<span class="fire">ly</span></div>
+    <div class="brand">Huel<span class="fire">ly</span></div>
     <p>Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.</p>
     <input id="nick-input" maxlength="14" placeholder="Takma ad seç" autocomplete="off">
     <div id="nick-error"></div>
@@ -371,13 +371,13 @@ const CONFIG = {
                           app restarts. This is what a published build uses.
      3. in-memory       — last-resort fallback (e.g. private mode where
                           localStorage is blocked) so the game never crashes.
-   Keys are namespaced 'huely:p:' (personal) / 'huely:s:' (shared) in
+   Keys are namespaced 'huelly:p:' (personal) / 'huelly:s:' (shared) in
    localStorage so we never collide with anything else on the origin.
    ============================================================ */
 const memStore = {};
-const LS_PREFIX = 'huely:';
+const LS_PREFIX = 'huelly:';
 const hasLS = (() => {
-  try { const k='huely:__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }
+  try { const k='huelly:__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }
   catch { return false; }
 })();
 const lsKey = (key, shared) => LS_PREFIX + (shared?'s:':'p:') + key;

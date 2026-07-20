@@ -1,5 +1,5 @@
 <svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
-  <!-- Huely app icon: the falling colour strip, the game's core visual.
+  <!-- Huelly app icon: the falling colour strip, the game's core visual.
        Artwork sits inside the central 672px adaptive-icon safe zone. -->
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">

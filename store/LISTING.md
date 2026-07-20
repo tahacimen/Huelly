@@ -1,4 +1,4 @@
-# Google Play mağaza listesi — Huely
+# Google Play mağaza listesi — Huelly
 
 Bu dosya, Play Console'a girilecek metinleri ve varlıkları toplar.
 Karakter sınırları Google'ın kurallarına göredir.
@@ -8,7 +8,7 @@ Karakter sınırları Google'ın kurallarına göredir.
 ## Uygulama adı (en fazla 30 karakter)
 
 ```
-Huely — Renk Kodu Oyunu
+Huelly — Renk Kodu Oyunu
 ```
 *(23 karakter)*
 
@@ -24,7 +24,7 @@ Düşen renk kodunu ezberle, eşleştir, ateşle. 33 seviye, 4 zorluk.
 ```
 Renk kodu düşüyor. Yere inmeden ezberle, aynısını gir — eşleşince otomatik ateşlenir.
 
-Huely, tek dokunuşla öğrenilen ama ustalaşması yıllar süren türden bir refleks ve hafıza oyunu. Kurallar üç saniyede anlaşılır: ekranın üstünden renkli bloklardan oluşan bir şerit düşer, sen de alttaki paletten aynı sırayı girersin. Doğru girdiğinde şerit havaya uçar ve puanı cebe atarsın. Şerit yere değerse bir can gider.
+Huelly, tek dokunuşla öğrenilen ama ustalaşması yıllar süren türden bir refleks ve hafıza oyunu. Kurallar üç saniyede anlaşılır: ekranın üstünden renkli bloklardan oluşan bir şerit düşer, sen de alttaki paletten aynı sırayı girersin. Doğru girdiğinde şerit havaya uçar ve puanı cebe atarsın. Şerit yere değerse bir can gider.
 
 Ne kadar yukarıda yakalarsan o kadar çok puan. Acele etmek her zaman kazandırır — ama panik yaptırır.
 

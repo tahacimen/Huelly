@@ -13,10 +13,10 @@ if (hasReleaseSigning) {
 }
 
 android {
-    namespace = "com.tahacimen.huely"
+    namespace = "com.tahacimen.huelly"
     compileSdk = rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.tahacimen.huely"
+        applicationId "com.tahacimen.huelly"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
