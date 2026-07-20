@@ -109,7 +109,7 @@ before every upload — Play rejects a `versionCode` it has already seen.
 Left to do, all of it needing the developer rather than the code:
 
 - [ ] Merge to `main` so GitHub Pages serves the policy at
-      <https://tahacimen.github.io/Huely/> (Pages is already configured)
+      <https://tahacimen.github.io/Huelly/> (Pages is already configured)
 - [ ] Create the release keystore (`keytool`), fill in `keystore.properties`,
       and back the `.jks` up offline — losing it means never updating the app
 - [ ] Google Play Console account, then upload the `.aab` and the `store/` assets
