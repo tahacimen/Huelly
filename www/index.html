@@ -86,6 +86,14 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 #nick-input:focus{border-color:var(--accent)}
 #nick-error{color:var(--bad);font-size:.85rem;min-height:1.2em;margin-top:4px}
 #screen-signup .btn{max-width:300px;margin-top:8px}
+/* Language toggle. On sign-up it sits in the corner so a player who cannot
+   read the Turkish copy can still find it before doing anything else. */
+.lang-btn{
+  position:absolute;top:max(14px,env(safe-area-inset-top));right:16px;
+  background:var(--panel);border-radius:10px;padding:8px 14px;
+  font-weight:800;font-size:.85rem;color:var(--ink-dim);letter-spacing:.06em;
+}
+.lang-btn:active{filter:brightness(1.4)}
 
 /* ---------- level select ---------- */
 #player-chip{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
@@ -233,10 +241,11 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
       <span style="background:#1E90FF"></span>
     </div>
     <div class="brand">Huel<span class="fire">ly</span></div>
-    <p>Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.</p>
-    <input id="nick-input" maxlength="14" placeholder="Takma ad seç" autocomplete="off">
+    <p data-i18n="tagline">Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.</p>
+    <input id="nick-input" maxlength="14" data-i18n-ph="nickPlaceholder" autocomplete="off">
     <div id="nick-error"></div>
-    <button class="btn" id="btn-join">Oynamaya başla</button>
+    <button class="btn" id="btn-join" data-i18n="start">Oynamaya başla</button>
+    <button class="lang-btn" id="btn-lang-signup">EN</button>
   </div>
 
   <!-- LEVEL SELECT -->
@@ -244,8 +253,9 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
     <div class="topbar">
       <div id="player-chip"><b id="chip-nick"></b><small id="chip-score"></small></div>
       <div style="display:flex;gap:8px">
-        <button class="icon-btn" id="btn-lb">🏆 Sıralama</button>
-        <button class="icon-btn" id="btn-switch">Değiştir</button>
+        <button class="icon-btn" id="btn-lang">EN</button>
+        <button class="icon-btn" id="btn-lb" data-i18n="ranks">🏆 Sıralama</button>
+        <button class="icon-btn" id="btn-switch" data-i18n="switchPlayer">Değiştir</button>
       </div>
     </div>
     <div id="level-grid"></div>
@@ -254,22 +264,22 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   <!-- DIFFICULTY -->
   <div class="screen" id="screen-diff">
     <div class="topbar">
-      <button class="icon-btn" id="btn-diff-back">← Geri</button>
+      <button class="icon-btn" id="btn-diff-back" data-i18n="back">← Geri</button>
       <h2 id="diff-title">Seviye 1</h2>
       <span style="width:64px"></span>
     </div>
     <div id="diff-cards">
       <button class="diff-card slow" data-diff="slow">
-        <div><h3>Yavaş</h3><small id="dc-slow"></small></div><div class="mult">×1</div>
+        <div><h3 data-i18n="diff_slow">Yavaş</h3><small id="dc-slow"></small></div><div class="mult">×1</div>
       </button>
       <button class="diff-card medium" data-diff="medium">
-        <div><h3>Orta</h3><small id="dc-medium"></small></div><div class="mult">×2</div>
+        <div><h3 data-i18n="diff_medium">Orta</h3><small id="dc-medium"></small></div><div class="mult">×2</div>
       </button>
       <button class="diff-card fast" data-diff="fast">
-        <div><h3>Hızlı</h3><small id="dc-fast"></small></div><div class="mult">×3</div>
+        <div><h3 data-i18n="diff_fast">Hızlı</h3><small id="dc-fast"></small></div><div class="mult">×3</div>
       </button>
       <button class="diff-card extreme" data-diff="extreme">
-        <div><h3>Ekstrem</h3><small id="dc-extreme"></small></div><div class="mult">×5</div>
+        <div><h3 data-i18n="diff_extreme">Ekstrem</h3><small id="dc-extreme"></small></div><div class="mult">×5</div>
       </button>
     </div>
     <div id="diff-best"></div>
@@ -279,11 +289,11 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   <div class="screen" id="screen-game">
     <div id="hud">
       <button id="btn-quit">✕</button>
-      <div class="hud-item"><small>Seviye</small><span id="hud-level">1</span></div>
-      <div class="hud-item"><small>Süre</small><span id="hud-timer">45</span></div>
-      <div class="hud-item"><small>Can</small><span id="hud-lives">❤❤❤</span></div>
-      <div class="hud-item"><small>Skor</small><span id="hud-score">0</span></div>
-      <button id="spd-btn" title="Speed boost — faster fall, more points">1×</button>
+      <div class="hud-item"><small data-i18n="hudLevel">Seviye</small><span id="hud-level">1</span></div>
+      <div class="hud-item"><small data-i18n="hudTime">Süre</small><span id="hud-timer">45</span></div>
+      <div class="hud-item"><small data-i18n="hudLives">Can</small><span id="hud-lives">❤❤❤</span></div>
+      <div class="hud-item"><small data-i18n="hudScore">Skor</small><span id="hud-score">0</span></div>
+      <button id="spd-btn" data-i18n-title="speedBoostHint">1×</button>
     </div>
     <div id="playfield">
       <div id="flash"></div>
@@ -293,8 +303,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
       <div id="player-grid"></div>
       <div id="palette"></div>
       <div id="ctrl-row">
-        <button id="btn-undo">⌫ Geri al</button>
-        <button id="btn-clear">Temizle</button>
+        <button id="btn-undo" data-i18n="undo">⌫ Geri al</button>
+        <button id="btn-clear" data-i18n="clear">Temizle</button>
       </div>
     </div>
   </div>
@@ -305,16 +315,16 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
     <div id="result-sub"></div>
     <div id="result-score"></div>
     <div id="result-best"></div>
-    <button class="btn" id="btn-next">Sonraki seviye →</button>
-    <button class="btn ghost" id="btn-retry">Tekrar oyna</button>
-    <button class="btn ghost" id="btn-to-levels">Seviye haritası</button>
+    <button class="btn" id="btn-next" data-i18n="nextLevel">Sonraki seviye →</button>
+    <button class="btn ghost" id="btn-retry" data-i18n="playAgain">Tekrar oyna</button>
+    <button class="btn ghost" id="btn-to-levels" data-i18n="levelMap">Seviye haritası</button>
   </div>
 
   <!-- LEADERBOARD -->
   <div class="screen" id="screen-lb">
     <div class="topbar">
-      <button class="icon-btn" id="btn-lb-back">← Geri</button>
-      <h2>Sıralama Tablosu</h2>
+      <button class="icon-btn" id="btn-lb-back" data-i18n="back">← Geri</button>
+      <h2 data-i18n="leaderboard">Sıralama Tablosu</h2>
       <span style="width:64px"></span>
     </div>
     <div id="lb-list"></div>
@@ -324,18 +334,136 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 
 <script>
 /* ============================================================
+   I18N — the gameplay is pure colour matching, so language is only
+   a thin shell over a universal core. Adding a locale is just adding
+   a dictionary below; nothing else needs to change.
+   Static markup is translated via data-i18n / data-i18n-ph /
+   data-i18n-title attributes; dynamic strings go through t().
+   ============================================================ */
+const STRINGS = {
+  tr: {
+    tagline:'Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.',
+    nickPlaceholder:'Takma ad seç',
+    start:'Oynamaya başla',
+    nickTooShort:'Takma ad en az 3 karakter olmalı.',
+    ranks:'🏆 Sıralama',
+    switchPlayer:'Değiştir',
+    back:'← Geri',
+    points:'{n} puan',
+    admin:'YÖNETİCİ',
+    levelN:'Seviye {n}',
+    diff_slow:'Yavaş', diff_medium:'Orta', diff_fast:'Hızlı', diff_extreme:'Ekstrem',
+    // Turkish does not inflect the noun after a numeral, so both forms match.
+    diffCardOne:'{lives} can · {colors} renk',
+    diffCardMany:'{lives} can · {colors} renk',
+    diffShuffle:' · butonlar karışır!',
+    bestPrefix:'En iyi — ',
+    noScores:'Bu seviyede henüz skor yok.',
+    hudLevel:'Seviye', hudTime:'Süre', hudLives:'Can', hudScore:'Skor',
+    speedBoostHint:'Hız artışı — daha hızlı düşer, daha çok puan',
+    undo:'⌫ Geri al',
+    clear:'Temizle',
+    levelDone:'Seviye tamam!',
+    gameOver:'Oyun bitti',
+    subCleared:'Seviye {n} · {diff} · süreyi tamamladın',
+    subNoMatch:'Seviye {n} · {diff} · hiç eşleştirme yapmadın',
+    subOutOfLives:'Seviye {n} · {diff} · canın bitti',
+    adminNote:'Yönetici testi — skor kaydedilmez veya sıralanmaz.',
+    newBest:'Yeni rekor!',
+    newBestWas:'Yeni rekor! (önceki: {prev})',
+    best:'En iyi: {n}',
+    needAMatch:'Seviyeyi geçmek için en az bir eşleştirme yapmalısın.',
+    finishToBank:'Skorunu kaydetmek için süreyi tamamla.',
+    nextLevel:'Sonraki seviye →',
+    playAgain:'Tekrar oyna',
+    levelMap:'Seviye haritası',
+    leaderboard:'Sıralama Tablosu',
+    loading:'Yükleniyor…',
+    lbEmpty:'Henüz sıralanan oyuncu yok.<br>Tabloya girmek için bir seviye tamamla!',
+  },
+  en: {
+    tagline:'Copy the falling color code before it lands. Match it — and it fires automatically.',
+    nickPlaceholder:'Pick a nickname',
+    start:'Start playing',
+    nickTooShort:'Nickname needs at least 3 characters.',
+    ranks:'🏆 Ranks',
+    switchPlayer:'Switch',
+    back:'← Back',
+    points:'{n} pts',
+    admin:'ADMIN',
+    levelN:'Level {n}',
+    diff_slow:'Slow', diff_medium:'Medium', diff_fast:'Fast', diff_extreme:'Extreme',
+    diffCardOne:'{lives} life · {colors} colors',
+    diffCardMany:'{lives} lives · {colors} colors',
+    diffShuffle:' · buttons shuffle!',
+    bestPrefix:'Best — ',
+    noScores:'No scores yet on this level.',
+    hudLevel:'Level', hudTime:'Time', hudLives:'Lives', hudScore:'Score',
+    speedBoostHint:'Speed boost — faster fall, more points',
+    undo:'⌫ Undo',
+    clear:'Clear',
+    levelDone:'Level complete!',
+    gameOver:'Game over',
+    subCleared:'Level {n} · {diff} · survived the clock',
+    subNoMatch:'Level {n} · {diff} · you never matched a strip',
+    subOutOfLives:'Level {n} · {diff} · out of lives',
+    adminNote:'Admin test — score not saved or ranked.',
+    newBest:'New best!',
+    newBestWas:'New best! (was {prev})',
+    best:'Best: {n}',
+    needAMatch:'You need at least one match to clear the level.',
+    finishToBank:'Complete the timer to bank your score.',
+    nextLevel:'Next level →',
+    playAgain:'Play again',
+    levelMap:'Level map',
+    leaderboard:'Leaderboard',
+    loading:'Loading…',
+    lbEmpty:'No players ranked yet.<br>Complete a level to get on the board!',
+  },
+};
+const LANGS = ['tr','en'];
+let lang = 'tr';
+
+/** Look up a string, filling {placeholders}. Falls back to Turkish, then the key. */
+function t(key, vars){
+  let s = (STRINGS[lang] && STRINGS[lang][key]) ?? STRINGS.tr[key] ?? key;
+  if (vars) for (const k in vars) s = s.split('{'+k+'}').join(vars[k]);
+  return s;
+}
+
+/** Paint every string that lives in the markup. Safe to call repeatedly. */
+function applyI18n(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPh);
+  });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => {
+    el.title = t(el.dataset.i18nTitle);
+  });
+  // The toggle advertises the language it switches TO, not the current one.
+  const other = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length].toUpperCase();
+  ['btn-lang','btn-lang-signup'].forEach(id => {
+    const b = document.getElementById(id); if (b) b.textContent = other;
+  });
+}
+
+/* ============================================================
    CONFIG — everything you'll want to tweak lives here
    ============================================================ */
 const CONFIG = {
   LEVEL_COUNT: 33,                 // add more levels by raising this number
   COLORS: ['#FF4757','#FFA502','#FFDD3C','#2ED573','#00D2D3','#1E90FF','#A55EEA'],
 
-  // Difficulty presets — point multiplier, speed multiplier, lives, extra colors
+  // Difficulty presets — point multiplier, speed multiplier, lives, extra colors.
+  // Display names live in STRINGS as diff_<key>, reached via t('diff_'+key).
   DIFFS: {
-    slow:    { label:'Yavaş',   mult:1, speed:0.6, lives:3, extraColors:0 },
-    medium:  { label:'Orta',    mult:2, speed:1.0, lives:2, extraColors:1 },
-    fast:    { label:'Hızlı',   mult:3, speed:1.6, lives:1, extraColors:2 },
-    extreme: { label:'Ekstrem', mult:5, speed:2.2, lives:1, extraColors:3, shuffle:true }, // shuffle = palette buttons move after every strip
+    slow:    { mult:1, speed:0.6, lives:3, extraColors:0 },
+    medium:  { mult:2, speed:1.0, lives:2, extraColors:1 },
+    fast:    { mult:3, speed:1.6, lives:1, extraColors:2 },
+    extreme: { mult:5, speed:2.2, lives:1, extraColors:3, shuffle:true }, // shuffle = palette buttons move after every strip
   },
   DIFF_ORDER: ['slow','medium','fast','extreme'],
 
@@ -477,7 +605,7 @@ async function savePlayer(){
    ============================================================ */
 $('btn-join').onclick = async () => {
   const nick = $('nick-input').value.trim();
-  if (nick.length < 3) { $('nick-error').textContent = 'Takma ad en az 3 karakter olmalı.'; return; }
+  if (nick.length < 3) { $('nick-error').textContent = t('nickTooShort'); return; }
   player = { nick, unlocked: 1, best: {} };
   await savePlayer();
   renderLevels(); show('levels');
@@ -508,8 +636,8 @@ $('btn-switch').onclick = async () => {
    ============================================================ */
 function renderLevels(){
   $('chip-nick').textContent = player.nick;
-  $('chip-score').innerHTML = totalScore(player).toLocaleString() + ' puan'
-    + (adminMode ? ' · <span id="admin-flag">YÖNETİCİ</span>' : '');
+  $('chip-score').innerHTML = t('points', { n: totalScore(player).toLocaleString() })
+    + (adminMode ? ' · <span id="admin-flag">' + t('admin') + '</span>' : '');
   const grid = $('level-grid'); grid.innerHTML = '';
   for (let i=1; i<=CONFIG.LEVEL_COUNT; i++){
     const b = document.createElement('button');
@@ -532,16 +660,18 @@ function renderLevels(){
    ============================================================ */
 function openDiff(lvl){
   pendingLevel = lvl;
-  $('diff-title').textContent = 'Seviye ' + lvl;
+  $('diff-title').textContent = t('levelN', { n: lvl });
   for (const d of CONFIG.DIFF_ORDER){
     const c = CONFIG.DIFFS[d];
-    $('dc-'+d).textContent = `${c.lives} can · ${CONFIG.colorCount(lvl,d)} renk`
-      + (c.shuffle ? ' · butonlar karışır!' : '');
+    $('dc-'+d).textContent =
+      t(c.lives === 1 ? 'diffCardOne' : 'diffCardMany',
+        { lives: c.lives, colors: CONFIG.colorCount(lvl,d) })
+      + (c.shuffle ? t('diffShuffle') : '');
   }
   const bests = CONFIG.DIFF_ORDER
-    .map(d => player.best[lvl+':'+d] != null ? `${CONFIG.DIFFS[d].label}: ${player.best[lvl+':'+d]}` : null)
+    .map(d => player.best[lvl+':'+d] != null ? `${t('diff_'+d)}: ${player.best[lvl+':'+d]}` : null)
     .filter(Boolean);
-  $('diff-best').textContent = bests.length ? 'En iyi — ' + bests.join(' · ') : 'Bu seviyede henüz skor yok.';
+  $('diff-best').textContent = bests.length ? t('bestPrefix') + bests.join(' · ') : t('noScores');
   show('diff');
 }
 $('btn-diff-back').onclick = () => show('levels');
@@ -747,18 +877,18 @@ async function endGame(survived){
   const key = lvl+':'+diff;
   const won = survived && score > 0;
 
-  $('result-title').textContent = won ? 'Seviye tamam!' : 'Oyun bitti';
+  $('result-title').textContent = won ? t('levelDone') : t('gameOver');
   $('result-title').style.color = won ? 'var(--good)' : 'var(--bad)';
+  const subVars = { n: lvl, diff: t('diff_'+diff) };
   $('result-sub').textContent = won
-    ? `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · süreyi tamamladın`
-    : survived
-      ? `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · hiç eşleştirme yapmadın`
-      : `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · canın bitti`;
+    ? t('subCleared', subVars)
+    : survived ? t('subNoMatch', subVars)
+               : t('subOutOfLives', subVars);
   $('result-score').textContent = score.toLocaleString();
 
   let bestNote = '';
   if (adminMode){
-    bestNote = 'Yönetici testi — skor kaydedilmez veya sıralanmaz.';
+    bestNote = t('adminNote');
   } else if (won){
     // Compare against null, not 0: `?? 0` meant a first clear worth 0 points
     // failed the `score > prev` test and was never recorded, so the level stayed
@@ -766,16 +896,16 @@ async function endGame(survived){
     const prev = player.best[key];
     if (prev == null || score > prev){
       player.best[key] = score;
-      bestNote = prev != null ? 'Yeni rekor! (önceki: '+prev+')' : 'Yeni rekor!';
+      bestNote = prev != null ? t('newBestWas', { prev }) : t('newBest');
     } else {
-      bestNote = 'En iyi: ' + prev;
+      bestNote = t('best', { n: prev });
     }
     if (lvl >= player.unlocked && lvl < CONFIG.LEVEL_COUNT) player.unlocked = lvl + 1;
     await savePlayer();
   } else if (survived){
-    bestNote = 'Seviyeyi geçmek için en az bir eşleştirme yapmalısın.';
+    bestNote = t('needAMatch');
   } else {
-    bestNote = player.best[key] != null ? 'En iyi: ' + player.best[key] : 'Skorunu kaydetmek için süreyi tamamla.';
+    bestNote = player.best[key] != null ? t('best', { n: player.best[key] }) : t('finishToBank');
   }
   $('result-best').textContent = bestNote;
   $('btn-next').style.display = (won && lvl < CONFIG.LEVEL_COUNT) ? 'block' : 'none';
@@ -792,7 +922,7 @@ $('btn-to-levels').onclick = () => { renderLevels(); show('levels'); };
 $('btn-lb').onclick = async () => {
   show('lb');
   const list = $('lb-list');
-  list.innerHTML = '<div class="lb-empty">Yükleniyor…</div>';
+  list.innerHTML = '<div class="lb-empty">' + t('loading') + '</div>';
   // Prefer the real global board; fall back to the local one when offline.
   let rows = await cloudLeaderboard(50);
   if (!rows){
@@ -804,7 +934,7 @@ $('btn-lb').onclick = async () => {
     }
     rows.sort((a,b)=>b.total-a.total);
   }
-  list.innerHTML = rows.length ? '' : '<div class="lb-empty">Henüz sıralanan oyuncu yok.<br>Tabloya girmek için bir seviye tamamla!</div>';
+  list.innerHTML = rows.length ? '' : '<div class="lb-empty">' + t('lbEmpty') + '</div>';
   rows.slice(0,50).forEach((r,i)=>{
     const div = document.createElement('div');
     div.className = 'lb-row' + (i===0?' top1':'') + (r.nick===player.nick?' me':'');
@@ -820,6 +950,33 @@ $('btn-lb-back').onclick = () => show('levels');
    BOOT — restore saved player if there is one
    ============================================================ */
 document.addEventListener('visibilitychange', () => { if (G) G.lastT = null; });
+
+/* Language is resolved synchronously, before the first paint, so the player
+   never sees a flash of the wrong language: a saved choice wins, otherwise
+   follow the device, otherwise fall back to English. */
+function detectLang(){
+  try {
+    const saved = localStorage.getItem(LS_PREFIX + 'lang');
+    if (saved && LANGS.includes(saved)) return saved;
+  } catch {}
+  const nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+  return nav.toLowerCase().startsWith('tr') ? 'tr' : 'en';
+}
+
+function setLang(next){
+  lang = next;
+  try { localStorage.setItem(LS_PREFIX + 'lang', lang); } catch {}
+  applyI18n();
+  if (player) renderLevels();   // the player chip is built in JS, not markup
+}
+
+const toggleLang = () => setLang(LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length]);
+$('btn-lang').onclick = toggleLang;
+$('btn-lang-signup').onclick = toggleLang;
+
+lang = detectLang();
+applyI18n();
+
 (async () => {
   const saved = await store.get('player');
   if (saved && saved.nick){ player = saved; renderLevels(); show('levels'); }

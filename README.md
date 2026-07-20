@@ -97,6 +97,8 @@ before every upload — Play rejects a `versionCode` it has already seen.
 ## Roadmap
 
 - [x] Localize UI to Turkish
+- [x] Turkish + English, auto-detected from the device and switchable in-game
+      (add a locale by adding a dictionary to `STRINGS`; nothing else changes)
 - [x] Persistent local storage (works off-Claude / on Android)
 - [x] Real global leaderboard (Supabase)
 - [x] Capacitor wrap for Android APK
