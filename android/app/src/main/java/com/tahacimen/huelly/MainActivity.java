@@ -1,4 +1,4 @@
-package com.tahacimen.huely;
+package com.tahacimen.huelly;
 
 import android.os.Bundle;
 import androidx.core.view.WindowCompat;

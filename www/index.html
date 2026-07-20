@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Huely</title>
+<title>Huelly</title>
 <style>
 /* ============================================================
-   HUELY — hyper-casual color sequence shooter
+   HUELLY — hyper-casual color sequence shooter
    Single-file prototype. All tunable values live in CONFIG
    at the top of the <script> below.
    ============================================================ */
@@ -232,7 +232,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
       <span style="background:#FFDD3C"></span><span style="background:#2ED573"></span>
       <span style="background:#1E90FF"></span>
     </div>
-    <div class="brand">Hue<span class="fire">ly</span></div>
+    <div class="brand">Huel<span class="fire">ly</span></div>
     <p>Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.</p>
     <input id="nick-input" maxlength="14" placeholder="Takma ad seç" autocomplete="off">
     <div id="nick-error"></div>
@@ -344,10 +344,19 @@ const CONFIG = {
   SPEED_BOOSTS: [1, 1.5, 2, 3],
 
   // Per-level scaling
-  seqLen:    lvl => Math.min(3 + Math.floor((lvl - 1) / 5), 10),      // blocks in the strip: 3 → 10
+  // Capped at 7: past that the strip stops testing reactions and just
+  // overruns working memory, which tops out around 7 items.
+  seqLen:    lvl => Math.min(3 + Math.floor((lvl - 1) / 6), 7),        // blocks in the strip: 3 → 7
   colorCount:(lvl, d) => Math.min(3 + Math.floor((lvl - 1) / 8) + CONFIG.DIFFS[d].extraColors, 7),
   levelTime: lvl => 30 + Math.min(lvl, 15),                            // seconds to survive: 31 → 45
-  fallTime:  (lvl, d) => Math.max(16 - lvl * 0.3, 6) / CONFIG.DIFFS[d].speed, // seconds top→bottom
+
+  // Seconds allowed per block, before the difficulty speed multiplier.
+  perBlockTime: lvl => Math.max(2.2 - lvl * 0.035, 1.1),
+  // Fall time scales WITH the sequence length. Previously it shrank while the
+  // strip grew, so a longer strip was punished twice and level 33 Extreme left
+  // 0.31s per block — unplayable. Tying the two together keeps the curve fair.
+  fallTime:  (lvl, d) =>
+    CONFIG.seqLen(lvl) * CONFIG.perBlockTime(lvl) / CONFIG.DIFFS[d].speed,   // seconds top→bottom
 
   // Scoring: (20 + 80 × heightFraction) × diffMult × levelBonus
   points: (heightFrac, lvl, d) =>
@@ -362,13 +371,13 @@ const CONFIG = {
                           app restarts. This is what a published build uses.
      3. in-memory       — last-resort fallback (e.g. private mode where
                           localStorage is blocked) so the game never crashes.
-   Keys are namespaced 'huely:p:' (personal) / 'huely:s:' (shared) in
+   Keys are namespaced 'huelly:p:' (personal) / 'huelly:s:' (shared) in
    localStorage so we never collide with anything else on the origin.
    ============================================================ */
 const memStore = {};
-const LS_PREFIX = 'huely:';
+const LS_PREFIX = 'huelly:';
 const hasLS = (() => {
-  try { const k='huely:__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }
+  try { const k='huelly:__t'; localStorage.setItem(k,'1'); localStorage.removeItem(k); return true; }
   catch { return false; }
 })();
 const lsKey = (key, shared) => LS_PREFIX + (shared?'s:':'p:') + key;
@@ -728,27 +737,43 @@ function fire(){
 /* ---------- end / quit ---------- */
 $('btn-quit').onclick = () => { if(G){ G.running=false; G=null; } show('levels'); };
 
-async function endGame(won){
+/* `survived` = the clock ran out with lives to spare. That alone is not enough
+   to clear a level: on Slow the early levels hand out more lives than there are
+   strips, so idling through level 1 without a single tap used to count as a win.
+   Clearing also requires landing at least one match. */
+async function endGame(survived){
   G.running = false;
   const {lvl, diff, score} = G;
   const key = lvl+':'+diff;
+  const won = survived && score > 0;
 
   $('result-title').textContent = won ? 'Seviye tamam!' : 'Oyun bitti';
   $('result-title').style.color = won ? 'var(--good)' : 'var(--bad)';
   $('result-sub').textContent = won
     ? `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · süreyi tamamladın`
-    : `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · canın bitti`;
+    : survived
+      ? `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · hiç eşleştirme yapmadın`
+      : `Seviye ${lvl} · ${CONFIG.DIFFS[diff].label} · canın bitti`;
   $('result-score').textContent = score.toLocaleString();
 
   let bestNote = '';
   if (adminMode){
     bestNote = 'Yönetici testi — skor kaydedilmez veya sıralanmaz.';
   } else if (won){
-    const prev = player.best[key] ?? 0;
-    if (score > prev){ player.best[key] = score; bestNote = prev ? 'Yeni rekor! (önceki: '+prev+')' : 'Yeni rekor!'; }
-    else bestNote = 'En iyi: ' + prev;
+    // Compare against null, not 0: `?? 0` meant a first clear worth 0 points
+    // failed the `score > prev` test and was never recorded, so the level stayed
+    // star-less and still read "no scores yet".
+    const prev = player.best[key];
+    if (prev == null || score > prev){
+      player.best[key] = score;
+      bestNote = prev != null ? 'Yeni rekor! (önceki: '+prev+')' : 'Yeni rekor!';
+    } else {
+      bestNote = 'En iyi: ' + prev;
+    }
     if (lvl >= player.unlocked && lvl < CONFIG.LEVEL_COUNT) player.unlocked = lvl + 1;
     await savePlayer();
+  } else if (survived){
+    bestNote = 'Seviyeyi geçmek için en az bir eşleştirme yapmalısın.';
   } else {
     bestNote = player.best[key] != null ? 'En iyi: ' + player.best[key] : 'Skorunu kaydetmek için süreyi tamamla.';
   }

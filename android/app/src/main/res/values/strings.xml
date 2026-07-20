@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Huely</string>
-    <string name="title_activity_main">Huely</string>
-    <string name="package_name">com.tahacimen.huely</string>
-    <string name="custom_url_scheme">com.tahacimen.huely</string>
+    <string name="app_name">Huelly</string>
+    <string name="title_activity_main">Huelly</string>
+    <string name="package_name">com.tahacimen.huelly</string>
+    <string name="custom_url_scheme">com.tahacimen.huelly</string>
 </resources>
