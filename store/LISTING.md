@@ -50,8 +50,8 @@ Push from 1× to 3× mid-run. The strip falls faster and the points scale with i
 ◆ GLOBAL LEADERBOARD
 Your total score goes on the worldwide board. All it takes is a nickname.
 
-◆ NO ADS
-No ads, no purchases, no subscriptions. You open it, you play.
+◆ FREE TO PLAY
+Free, no subscriptions, no paywalls. Ads keep it free, and the "watch & continue" rewarded ad is always optional.
 
 ◆ WORKS OFFLINE
 Play without a connection; your progress stays on your device and syncs to the leaderboard when you're back online.
@@ -100,8 +100,8 @@ Oyunun ortasında 1×'ten 3×'e kadar hızlanabilirsin. Şerit daha hızlı dü�
 ◆ KÜRESEL SIRALAMA
 Topladığın toplam puan dünya sıralamasına yazılır. Tek gereken bir takma ad.
 
-◆ REKLAM YOK
-Reklam yok, satın alma yok, üyelik yok. Oyunu açıyorsun, oynuyorsun.
+◆ ÜCRETSİZ
+Ücretsiz, üyelik yok, ödeme duvarı yok. Reklamlar oyunu ücretsiz tutar; "izle ve devam et" ödüllü reklamı her zaman isteğe bağlıdır.
 
 ◆ ÇEVRİMDIŞI ÇALIŞIR
 İnternet olmadan da oynayabilirsin; ilerlemen cihazında saklanır ve bağlandığında sıralamaya senkronlanır.
@@ -114,28 +114,32 @@ Hesap açman, e-posta vermen veya izin kabul etmen gerekmiyor. Sadece bir takma 
 ## Kategorileme
 
 - **Kategori:** Oyunlar → Bulmaca (Puzzle) *veya* Sıradan (Casual)
-- **İçerik derecelendirmesi:** Herkes / 3+
-  (şiddet, kullanıcı iletişimi veya satın alma yok)
+- **İçerik derecelendirmesi:** Herkes / 3+ (şiddet/iletişim/satın alma yok)
 - **Ücretsiz / Ücretli:** Ücretsiz
-- **Reklam içerir:** Hayır
+- **Reklam içerir:** **EVET** (Google AdMob — geçiş + ödüllü)
 - **Uygulama içi satın alma:** Hayır
 
-## Veri güvenliği formu (Play Console)
+> ⚠️ **Reklam eklendi — Play Console beyanlarını güncelle:**
+> - **App content → Reklamlar:** "Evet, uygulamamda reklam var"
+> - **App content → Reklam Kimliği:** "Evet, reklam kimliği kullanıyor"
+> - **Veri güvenliği:** aşağıdaki güncellenmiş tabloya göre yeniden düzenle
+> Bunlar daha önce "Hayır" olarak doldurulduysa, düzeltilmeli.
 
-Play Console'daki "Data safety" bölümünde beyan edilecekler:
+## Veri güvenliği formu (Play Console) — reklam dahil güncel
 
 | Soru | Cevap |
 |------|-------|
-| Veri topluyor mu? | **Evet** |
-| Toplanan veri | Kullanıcının seçtiği **takma ad** ve **toplam skor** |
-| Kategori | "Kişisel bilgiler → Ad" (takma ad), "Uygulama etkinliği → Uygulama içi eylemler" (skor) |
+| Veri topluyor/paylaşıyor mu? | **Evet** |
+| Takma ad | Kişisel bilgiler → **Kullanıcı kimlikleri** · toplanır · zorunlu · Uygulama işlevselliği |
+| Toplam skor | Uygulama etkinliği → **Uygulama işlemleri** · toplanır · zorunlu · Uygulama işlevselliği |
+| **Reklam kimliği (AdMob)** | Cihaz veya diğer kimlikler → **Cihaz kimlikleri** · toplanır **ve paylaşılır** · Reklamlar/pazarlama + Analiz |
 | Aktarım şifreli mi? | **Evet** (HTTPS) |
-| Kullanıcı silinmesini isteyebilir mi? | **Evet** (gizlilik politikasındaki adres üzerinden) |
-| Veri paylaşılıyor mu (3. taraflara)? | **Hayır** |
-| Reklam/analitik amaçlı kullanım? | **Hayır** |
+| Silme talebi | **Evet** — https://tahacimen.github.io/Huelly/ |
+| 3. tarafla paylaşım | **Evet** — reklam kimliği/verisi Google (AdMob) ile |
 
-> Not: takma ad sıralama tablosunda herkese açık görünür; bu, gizlilik
-> politikasında açıkça belirtilmiştir.
+> Notlar: (1) takma ad sıralama tablosunda herkese açıktır. (2) AdMob'un topladığı
+> reklam verisi için Google'ın kendi beyanları geçerlidir; "Cihaz kimlikleri"ni
+> reklam amaçlı toplanan+paylaşılan olarak işaretlemek AdMob için standarttır.
 
 ## Gizlilik politikası URL'si
 
