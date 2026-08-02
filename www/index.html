@@ -225,6 +225,19 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .lb-row.me{outline:2px solid var(--accent)}
 .lb-empty{color:var(--ink-dim);text-align:center;margin-top:40px}
 
+/* ---------- continue (rewarded-ad revive) overlay ---------- */
+#continue-overlay{
+  position:absolute;inset:0;z-index:20;display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:16px;
+  padding:32px;text-align:center;
+  background:rgba(10,10,22,.86);backdrop-filter:blur(3px);
+}
+#continue-overlay.show{display:flex}
+#continue-overlay h3{font-size:1.6rem;font-weight:900;color:var(--bad);text-transform:uppercase;letter-spacing:.03em}
+#continue-overlay p{color:var(--ink-dim);max-width:280px}
+#continue-overlay .btn{max-width:300px}
+#btn-continue{background:var(--good);color:#04220f}
+
 @media (prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
 }
@@ -330,6 +343,14 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
     <div id="lb-list"></div>
   </div>
 
+  <!-- CONTINUE (rewarded-ad revive), shown over the game when lives hit 0 -->
+  <div id="continue-overlay">
+    <h3 data-i18n="continueTitle">Canların bitti!</h3>
+    <p data-i18n="continueBody">Kısa bir reklam izle, +1 canla devam et.</p>
+    <button class="btn" id="btn-continue" data-i18n="continueWatch">▶ İzle ve devam et</button>
+    <button class="btn ghost" id="btn-giveup" data-i18n="continueGiveUp">Vazgeç</button>
+  </div>
+
 </div>
 
 <script>
@@ -380,6 +401,10 @@ const STRINGS = {
     leaderboard:'Sıralama Tablosu',
     loading:'Yükleniyor…',
     lbEmpty:'Henüz sıralanan oyuncu yok.<br>Tabloya girmek için bir seviye tamamla!',
+    continueTitle:'Canların bitti!',
+    continueBody:'Kısa bir reklam izle, +1 canla devam et.',
+    continueWatch:'▶ İzle ve devam et',
+    continueGiveUp:'Vazgeç',
   },
   en: {
     tagline:'Copy the falling color code before it lands. Match it — and it fires automatically.',
@@ -419,6 +444,10 @@ const STRINGS = {
     leaderboard:'Leaderboard',
     loading:'Loading…',
     lbEmpty:'No players ranked yet.<br>Complete a level to get on the board!',
+    continueTitle:'Out of lives!',
+    continueBody:'Watch a short ad to continue with +1 life.',
+    continueWatch:'▶ Watch & continue',
+    continueGiveUp:'Give up',
   },
 };
 const LANGS = ['tr','en'];
@@ -678,6 +707,72 @@ $('btn-diff-back').onclick = () => show('levels');
 document.querySelectorAll('.diff-card').forEach(c => c.onclick = () => startGame(pendingLevel, c.dataset.diff));
 
 /* ============================================================
+   ADS (AdMob) — an interstitial between games and a rewarded
+   "revive" when lives run out. Runs ONLY inside the native app;
+   in a browser, or if the plugin is missing, every method is a
+   safe no-op, so the game plays identically everywhere else.
+
+   The ad-unit ids below are GOOGLE'S OFFICIAL TEST ids: they serve
+   test ads and can NEVER earn money. To go live, replace these AND
+   the app id in android/app/src/main/AndroidManifest.xml with the
+   real ids from your AdMob account, and set isTesting = false.
+   ============================================================ */
+const ADS = {
+  interstitialId: 'ca-app-pub-3940256099942544/1033173712', // TEST — replace
+  rewardedId:     'ca-app-pub-3940256099942544/5224354917', // TEST — replace
+  isTesting: true,                                            // false in production
+
+  _plugin: null,
+  _interstitialReady: false,
+  _rewardedReady: false,
+  _gamesSinceInterstitial: 0,
+  INTERSTITIAL_EVERY: 2,   // show at most once per this many finished games
+
+  get available(){ return !!this._plugin; },
+  rewardedReady(){ return this.available && this._rewardedReady; },
+
+  async init(){
+    const Cap = window.Capacitor;
+    if (!Cap || !Cap.isNativePlatform || !Cap.isNativePlatform() ||
+        !Cap.Plugins || !Cap.Plugins.AdMob) return;   // browser / plugin absent → no-op
+    this._plugin = Cap.Plugins.AdMob;
+    try {
+      await this._plugin.initialize({ initializeForTesting: this.isTesting });
+      this._plugin.addListener('interstitialAdLoaded',       () => { this._interstitialReady = true; });
+      this._plugin.addListener('interstitialAdFailedToLoad', () => { this._interstitialReady = false; });
+      this._plugin.addListener('interstitialAdDismissed',    () => { this._interstitialReady = false; this._prepInterstitial(); });
+      this._plugin.addListener('onRewardedVideoAdLoaded',       () => { this._rewardedReady = true; });
+      this._plugin.addListener('onRewardedVideoAdFailedToLoad', () => { this._rewardedReady = false; });
+      this._plugin.addListener('onRewardedVideoAdDismissed',    () => { this._rewardedReady = false; this._prepRewarded(); });
+      this._prepInterstitial();
+      this._prepRewarded();
+    } catch(e){ this._plugin = null; }
+  },
+
+  async _prepInterstitial(){ try { await this._plugin.prepareInterstitial({ adId: this.interstitialId }); } catch(e){ this._interstitialReady = false; } },
+  async _prepRewarded(){     try { await this._plugin.prepareRewardVideoAd({ adId: this.rewardedId });   } catch(e){ this._rewardedReady = false; } },
+
+  /* A natural-break interstitial, capped so it never feels spammy. */
+  async maybeShowInterstitial(){
+    if (!this.available) return;
+    if (++this._gamesSinceInterstitial < this.INTERSTITIAL_EVERY) return;
+    if (!this._interstitialReady) return;
+    this._gamesSinceInterstitial = 0;
+    try { await this._plugin.showInterstitial(); } catch(e){ this._prepInterstitial(); }
+  },
+
+  /* Show a rewarded video; onReward(true) only if the user actually earned it. */
+  async showRewarded(onReward){
+    if (!this.rewardedReady()){ onReward(false); return; }
+    let earned = false;
+    const r = await this._plugin.addListener('onRewardedVideoAdReward',    () => { earned = true; });
+    const d = await this._plugin.addListener('onRewardedVideoAdDismissed', () => { r.remove(); d.remove(); onReward(earned); });
+    try { await this._plugin.showRewardVideoAd(); }
+    catch(e){ r.remove(); d.remove(); onReward(false); }
+  },
+};
+
+/* ============================================================
    AUDIO — tiny synth blips (no assets needed)
    ============================================================ */
 let AC = null;
@@ -709,6 +804,7 @@ function startGame(lvl, diff){
     y: 0, maxY: 1,
     running: true, locked: false, lastT: null,
     boost: player.boost || 1,
+    reviveUsed: false,   // a rewarded-ad revive may be offered once per game
   };
   $('hud-level').textContent = lvl;
   $('hud-score').textContent = '0';
@@ -792,9 +888,38 @@ function stripLanded(){
   G.lives--; updateLives(); beep(110, .25, 'sawtooth', .08);
   $('flash').className='red'; setTimeout(()=>$('flash').className='',400);
   $('app').classList.add('shake'); setTimeout(()=>$('app').classList.remove('shake'),400);
-  if (G.lives <= 0){ setTimeout(()=>endGame(false), 450); return; }
+  if (G.lives <= 0){
+    G.running = false;                              // freeze the loop while we decide
+    setTimeout(() => offerContinueOrEnd(), 450);
+    return;
+  }
   setTimeout(()=>{ if(G && G.running){ spawnStrip(); G.locked=false; } }, 550);
 }
+
+/* Out of lives: offer a rewarded-ad revive if one is ready (once per game),
+   otherwise just end. Admin test runs never see ads. */
+function offerContinueOrEnd(){
+  if (!G) return;
+  if (!adminMode && !G.reviveUsed && ADS.rewardedReady()){
+    $('continue-overlay').classList.add('show');
+  } else {
+    endGame(false);
+  }
+}
+function reviveGame(){
+  if (!G) return;
+  G.reviveUsed = true;
+  G.lives = 1; updateLives();
+  G.running = true; G.locked = false; G.lastT = null;
+  const s = $('target-strip'); if (s) s.remove();
+  spawnStrip();
+  requestAnimationFrame(tick);
+}
+$('btn-continue').onclick = () => {
+  $('continue-overlay').classList.remove('show');
+  ADS.showRewarded(earned => { if (earned && G) reviveGame(); else endGame(false); });
+};
+$('btn-giveup').onclick = () => { $('continue-overlay').classList.remove('show'); endGame(false); };
 
 /* ---------- player input ---------- */
 function tapColor(color){
@@ -873,6 +998,7 @@ $('btn-quit').onclick = () => { if(G){ G.running=false; G=null; } show('levels')
    Clearing also requires landing at least one match. */
 async function endGame(survived){
   G.running = false;
+  $('continue-overlay').classList.remove('show');
   const {lvl, diff, score} = G;
   const key = lvl+':'+diff;
   const won = survived && score > 0;
@@ -913,6 +1039,7 @@ async function endGame(survived){
   $('btn-retry').onclick = () => startGame(lvl, diff);
   G = null;
   show('result');
+  if (!adminMode) ADS.maybeShowInterstitial();   // capped natural-break ad
 }
 $('btn-to-levels').onclick = () => { renderLevels(); show('levels'); };
 
@@ -976,6 +1103,7 @@ $('btn-lang-signup').onclick = toggleLang;
 
 lang = detectLang();
 applyI18n();
+ADS.init();   // no-op in a browser; sets up AdMob in the native app
 
 (async () => {
   const saved = await store.get('player');
