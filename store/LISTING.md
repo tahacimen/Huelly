@@ -4,63 +4,15 @@ Bu dosya, Play Console'a girilecek metinleri ve varlıkları toplar.
 Karakter sınırları Google'ın kurallarına göredir.
 
 Uygulama Türkçe ve İngilizce destekliyor, bu yüzden mağaza listesi de iki dilde
-girilmeli. Play Console'da **varsayılan dili Türkçe** yapıp İngilizceyi çeviri
-olarak eklemek en pratiği — aşağıda ikisi de hazır.
+girilmeli. Play Console'da **varsayılan dili İngilizce (English – United States)**
+yap, Türkçeyi (Türkiye) çeviri olarak ekle. Böylece uluslararası oyuncular
+İngilizce görür, cihazı Türkçe olanlara mağaza otomatik Türkçeyi gösterir.
+Aşağıda ikisi de hazır.
 
 ---
 ---
 
-# 🇹🇷 TÜRKÇE (varsayılan)
-
-## Uygulama adı (en fazla 30 karakter)
-
-```
-Huelly — Renk Kodu Oyunu
-```
-*(24 karakter)*
-
-## Kısa açıklama (en fazla 80 karakter)
-
-```
-Düşen renk kodunu ezberle, eşleştir, ateşle. 33 seviye, 4 zorluk.
-```
-*(65 karakter)*
-
-## Tam açıklama (en fazla 4000 karakter)
-
-```
-Renk kodu düşüyor. Yere inmeden ezberle, aynısını gir — eşleşince otomatik ateşlenir.
-
-Huelly, tek dokunuşla öğrenilen ama ustalaşması yıllar süren türden bir refleks ve hafıza oyunu. Kurallar üç saniyede anlaşılır: ekranın üstünden renkli bloklardan oluşan bir şerit düşer, sen de alttaki paletten aynı sırayı girersin. Doğru girdiğinde şerit havaya uçar ve puanı cebe atarsın. Şerit yere değerse bir can gider.
-
-Ne kadar yukarıda yakalarsan o kadar çok puan. Acele etmek her zaman kazandırır — ama panik yaptırır.
-
-◆ 33 SEVİYE
-Diziler kısadan uzuna, renkler azdan çoğa. Her seviye bir öncekinin üstüne koyar.
-
-◆ 4 ZORLUK, 4 KAT PUAN
-Yavaş (×1) · Orta (×2) · Hızlı (×3) · Ekstrem (×5)
-Ekstrem'de renk butonları her şeritten sonra yer değiştirir — kas hafızan işe yaramaz, gerçekten bakmak zorundasın.
-
-◆ HIZ ÇARPANI
-Oyunun ortasında 1×'ten 3×'e kadar hızlanabilirsin. Şerit daha hızlı düşer, puan da o oranda katlanır. Ne kadar cesursun?
-
-◆ KÜRESEL SIRALAMA
-Topladığın toplam puan dünya sıralamasına yazılır. Tek gereken bir takma ad.
-
-◆ REKLAM YOK
-Reklam yok, satın alma yok, üyelik yok. Oyunu açıyorsun, oynuyorsun.
-
-◆ ÇEVRİMDIŞI ÇALIŞIR
-İnternet olmadan da oynayabilirsin; ilerlemen cihazında saklanır ve bağlandığında sıralamaya senkronlanır.
-
-Hesap açman, e-posta vermen veya izin kabul etmen gerekmiyor. Sadece bir takma ad seç ve başla.
-```
-
----
----
-
-# 🇬🇧 ENGLISH (çeviri olarak ekle)
+# 🇬🇧 ENGLISH (varsayılan / default language)
 
 ## App name (max 30 characters)
 
@@ -108,6 +60,56 @@ No account, no email, no permissions to accept. Just pick a nickname and start.
 ```
 
 ---
+---
+
+# 🇹🇷 TÜRKÇE (çeviri olarak ekle — Türkiye)
+
+## Uygulama adı (en fazla 30 karakter)
+
+```
+Huelly — Renk Kodu Oyunu
+```
+*(24 karakter)*
+
+## Kısa açıklama (en fazla 80 karakter)
+
+```
+Düşen renk kodunu ezberle, eşleştir, ateşle. 33 seviye, 4 zorluk.
+```
+*(65 karakter)*
+
+## Tam açıklama (en fazla 4000 karakter)
+
+```
+Renk kodu düşüyor. Yere inmeden ezberle, aynısını gir — eşleşince otomatik ateşlenir.
+
+Huelly, tek dokunuşla öğrenilen ama ustalaşması yıllar süren türden bir refleks ve hafıza oyunu. Kurallar üç saniyede anlaşılır: ekranın üstünden renkli bloklardan oluşan bir şerit düşer, sen de alttaki paletten aynı sırayı girersin. Doğru girdiğinde şerit havaya uçar ve puanı cebe atarsın. Şerit yere değerse bir can gider.
+
+Ne kadar yukarıda yakalarsan o kadar çok puan. Acele etmek her zaman kazandırır — ama panik yaptırır.
+
+◆ 33 SEVİYE
+Diziler kısadan uzuna, renkler azdan çoğa. Her seviye bir öncekinin üstüne koyar.
+
+◆ 4 ZORLUK, 4 KAT PUAN
+Yavaş (×1) · Orta (×2) · Hızlı (×3) · Ekstrem (×5)
+Ekstrem'de renk butonları her şeritten sonra yer değiştirir — kas hafızan işe yaramaz, gerçekten bakmak zorundasın.
+
+◆ HIZ ÇARPANI
+Oyunun ortasında 1×'ten 3×'e kadar hızlanabilirsin. Şerit daha hızlı düşer, puan da o oranda katlanır. Ne kadar cesursun?
+
+◆ KÜRESEL SIRALAMA
+Topladığın toplam puan dünya sıralamasına yazılır. Tek gereken bir takma ad.
+
+◆ REKLAM YOK
+Reklam yok, satın alma yok, üyelik yok. Oyunu açıyorsun, oynuyorsun.
+
+◆ ÇEVRİMDIŞI ÇALIŞIR
+İnternet olmadan da oynayabilirsin; ilerlemen cihazında saklanır ve bağlandığında sıralamaya senkronlanır.
+
+Hesap açman, e-posta vermen veya izin kabul etmen gerekmiyor. Sadece bir takma ad seç ve başla.
+```
+
+---
 
 ## Kategorileme
 
@@ -137,8 +139,11 @@ Play Console'daki "Data safety" bölümünde beyan edilecekler:
 
 ## Gizlilik politikası URL'si
 
-**Zorunlu.** `PRIVACY.md` herkese açık bir adreste yayınlanmalı ve URL'si buraya
-girilmeli. (Henüz yayınlanmadı — iletişim adresi de doldurulmalı.)
+**Zorunlu.** Canlı ve hazır:
+
+```
+https://tahacimen.github.io/Huelly/
+```
 
 ---
 
