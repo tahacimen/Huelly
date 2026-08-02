@@ -153,11 +153,10 @@ https://tahacimen.github.io/Huelly/
 |--------|-------|-------|
 | Uygulama ikonu 512×512 | `store/icon-512.png` | ✅ |
 | Tanıtım görseli 1024×500 | `store/feature-graphic.png` | ✅ |
-| Telefon ekran görüntüleri (min. 2) | `store/screenshots/` | ✅ 5 adet |
+| Telefon ekran görüntüleri — İngilizce | `store/screenshots/en/` | ✅ 5 adet |
+| Telefon ekran görüntüleri — Türkçe | `store/screenshots/tr/` | ✅ 5 adet |
 
-Ekran görüntüleri 1080×2424 (Pixel 9 emülatörü). Play'in telefon için istediği
-sınırlar içinde: en az 320 px, en fazla 3840 px, en-boy oranı 9:16'ya yakın.
-
-> Oynanış görüntülerinde skor 0 görünüyor; bunlar otomasyonla çekildi. Daha
-> gösterişli bir kare istersen oyunu birkaç dakika oynayıp kendi ekran
-> görüntünü alman yeterli — dosyayı aynı isimle değiştir.
+Her dilde 5 kare: başlık, seviye haritası, zorluk seçimi, oynanış (gerçek skorla),
+seviye tamamlandı. 1080×2424 (Pixel 9), Play'in telefon sınırları içinde
+(320–3840 px). İngilizce mağaza sayfasına `en/`, Türkçe çeviriye `tr/` görsellerini
+yükle.
