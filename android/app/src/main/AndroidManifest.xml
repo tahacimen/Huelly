@@ -8,13 +8,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!-- AdMob app id. This is GOOGLE'S OFFICIAL TEST id — it serves test ads
-             only and can never earn money. Replace the value with your real
-             AdMob app id (ca-app-pub-XXXX~YYYY) once the AdMob account exists.
-             The matching ad-unit ids live in www/index.html (ADS config). -->
+        <!-- Real AdMob app id for Huelly. The matching ad-unit ids live in
+             www/index.html (ADS config). -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713" />
+            android:value="ca-app-pub-8892489378986653~4576925826" />
 
         <activity
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|smallestScreenSize|screenLayout|uiMode|navigation|density"
