@@ -4,63 +4,15 @@ Bu dosya, Play Console'a girilecek metinleri ve varlıkları toplar.
 Karakter sınırları Google'ın kurallarına göredir.
 
 Uygulama Türkçe ve İngilizce destekliyor, bu yüzden mağaza listesi de iki dilde
-girilmeli. Play Console'da **varsayılan dili Türkçe** yapıp İngilizceyi çeviri
-olarak eklemek en pratiği — aşağıda ikisi de hazır.
+girilmeli. Play Console'da **varsayılan dili İngilizce (English – United States)**
+yap, Türkçeyi (Türkiye) çeviri olarak ekle. Böylece uluslararası oyuncular
+İngilizce görür, cihazı Türkçe olanlara mağaza otomatik Türkçeyi gösterir.
+Aşağıda ikisi de hazır.
 
 ---
 ---
 
-# 🇹🇷 TÜRKÇE (varsayılan)
-
-## Uygulama adı (en fazla 30 karakter)
-
-```
-Huelly — Renk Kodu Oyunu
-```
-*(24 karakter)*
-
-## Kısa açıklama (en fazla 80 karakter)
-
-```
-Düşen renk kodunu ezberle, eşleştir, ateşle. 33 seviye, 4 zorluk.
-```
-*(65 karakter)*
-
-## Tam açıklama (en fazla 4000 karakter)
-
-```
-Renk kodu düşüyor. Yere inmeden ezberle, aynısını gir — eşleşince otomatik ateşlenir.
-
-Huelly, tek dokunuşla öğrenilen ama ustalaşması yıllar süren türden bir refleks ve hafıza oyunu. Kurallar üç saniyede anlaşılır: ekranın üstünden renkli bloklardan oluşan bir şerit düşer, sen de alttaki paletten aynı sırayı girersin. Doğru girdiğinde şerit havaya uçar ve puanı cebe atarsın. Şerit yere değerse bir can gider.
-
-Ne kadar yukarıda yakalarsan o kadar çok puan. Acele etmek her zaman kazandırır — ama panik yaptırır.
-
-◆ 33 SEVİYE
-Diziler kısadan uzuna, renkler azdan çoğa. Her seviye bir öncekinin üstüne koyar.
-
-◆ 4 ZORLUK, 4 KAT PUAN
-Yavaş (×1) · Orta (×2) · Hızlı (×3) · Ekstrem (×5)
-Ekstrem'de renk butonları her şeritten sonra yer değiştirir — kas hafızan işe yaramaz, gerçekten bakmak zorundasın.
-
-◆ HIZ ÇARPANI
-Oyunun ortasında 1×'ten 3×'e kadar hızlanabilirsin. Şerit daha hızlı düşer, puan da o oranda katlanır. Ne kadar cesursun?
-
-◆ KÜRESEL SIRALAMA
-Topladığın toplam puan dünya sıralamasına yazılır. Tek gereken bir takma ad.
-
-◆ REKLAM YOK
-Reklam yok, satın alma yok, üyelik yok. Oyunu açıyorsun, oynuyorsun.
-
-◆ ÇEVRİMDIŞI ÇALIŞIR
-İnternet olmadan da oynayabilirsin; ilerlemen cihazında saklanır ve bağlandığında sıralamaya senkronlanır.
-
-Hesap açman, e-posta vermen veya izin kabul etmen gerekmiyor. Sadece bir takma ad seç ve başla.
-```
-
----
----
-
-# 🇬🇧 ENGLISH (çeviri olarak ekle)
+# 🇬🇧 ENGLISH (varsayılan / default language)
 
 ## App name (max 30 characters)
 
@@ -98,8 +50,8 @@ Push from 1× to 3× mid-run. The strip falls faster and the points scale with i
 ◆ GLOBAL LEADERBOARD
 Your total score goes on the worldwide board. All it takes is a nickname.
 
-◆ NO ADS
-No ads, no purchases, no subscriptions. You open it, you play.
+◆ FREE TO PLAY
+Free, no subscriptions, no paywalls. Ads keep it free, and the "watch & continue" rewarded ad is always optional.
 
 ◆ WORKS OFFLINE
 Play without a connection; your progress stays on your device and syncs to the leaderboard when you're back online.
@@ -108,37 +60,94 @@ No account, no email, no permissions to accept. Just pick a nickname and start.
 ```
 
 ---
+---
+
+# 🇹🇷 TÜRKÇE (çeviri olarak ekle — Türkiye)
+
+## Uygulama adı (en fazla 30 karakter)
+
+```
+Huelly — Renk Kodu Oyunu
+```
+*(24 karakter)*
+
+## Kısa açıklama (en fazla 80 karakter)
+
+```
+Düşen renk kodunu ezberle, eşleştir, ateşle. 33 seviye, 4 zorluk.
+```
+*(65 karakter)*
+
+## Tam açıklama (en fazla 4000 karakter)
+
+```
+Renk kodu düşüyor. Yere inmeden ezberle, aynısını gir — eşleşince otomatik ateşlenir.
+
+Huelly, tek dokunuşla öğrenilen ama ustalaşması yıllar süren türden bir refleks ve hafıza oyunu. Kurallar üç saniyede anlaşılır: ekranın üstünden renkli bloklardan oluşan bir şerit düşer, sen de alttaki paletten aynı sırayı girersin. Doğru girdiğinde şerit havaya uçar ve puanı cebe atarsın. Şerit yere değerse bir can gider.
+
+Ne kadar yukarıda yakalarsan o kadar çok puan. Acele etmek her zaman kazandırır — ama panik yaptırır.
+
+◆ 33 SEVİYE
+Diziler kısadan uzuna, renkler azdan çoğa. Her seviye bir öncekinin üstüne koyar.
+
+◆ 4 ZORLUK, 4 KAT PUAN
+Yavaş (×1) · Orta (×2) · Hızlı (×3) · Ekstrem (×5)
+Ekstrem'de renk butonları her şeritten sonra yer değiştirir — kas hafızan işe yaramaz, gerçekten bakmak zorundasın.
+
+◆ HIZ ÇARPANI
+Oyunun ortasında 1×'ten 3×'e kadar hızlanabilirsin. Şerit daha hızlı düşer, puan da o oranda katlanır. Ne kadar cesursun?
+
+◆ KÜRESEL SIRALAMA
+Topladığın toplam puan dünya sıralamasına yazılır. Tek gereken bir takma ad.
+
+◆ ÜCRETSİZ
+Ücretsiz, üyelik yok, ödeme duvarı yok. Reklamlar oyunu ücretsiz tutar; "izle ve devam et" ödüllü reklamı her zaman isteğe bağlıdır.
+
+◆ ÇEVRİMDIŞI ÇALIŞIR
+İnternet olmadan da oynayabilirsin; ilerlemen cihazında saklanır ve bağlandığında sıralamaya senkronlanır.
+
+Hesap açman, e-posta vermen veya izin kabul etmen gerekmiyor. Sadece bir takma ad seç ve başla.
+```
+
+---
 
 ## Kategorileme
 
 - **Kategori:** Oyunlar → Bulmaca (Puzzle) *veya* Sıradan (Casual)
-- **İçerik derecelendirmesi:** Herkes / 3+
-  (şiddet, kullanıcı iletişimi veya satın alma yok)
+- **İçerik derecelendirmesi:** Herkes / 3+ (şiddet/iletişim/satın alma yok)
 - **Ücretsiz / Ücretli:** Ücretsiz
-- **Reklam içerir:** Hayır
+- **Reklam içerir:** **EVET** (Google AdMob — geçiş + ödüllü)
 - **Uygulama içi satın alma:** Hayır
 
-## Veri güvenliği formu (Play Console)
+> ⚠️ **Reklam eklendi — Play Console beyanlarını güncelle:**
+> - **App content → Reklamlar:** "Evet, uygulamamda reklam var"
+> - **App content → Reklam Kimliği:** "Evet, reklam kimliği kullanıyor"
+> - **Veri güvenliği:** aşağıdaki güncellenmiş tabloya göre yeniden düzenle
+> Bunlar daha önce "Hayır" olarak doldurulduysa, düzeltilmeli.
 
-Play Console'daki "Data safety" bölümünde beyan edilecekler:
+## Veri güvenliği formu (Play Console) — reklam dahil güncel
 
 | Soru | Cevap |
 |------|-------|
-| Veri topluyor mu? | **Evet** |
-| Toplanan veri | Kullanıcının seçtiği **takma ad** ve **toplam skor** |
-| Kategori | "Kişisel bilgiler → Ad" (takma ad), "Uygulama etkinliği → Uygulama içi eylemler" (skor) |
+| Veri topluyor/paylaşıyor mu? | **Evet** |
+| Takma ad | Kişisel bilgiler → **Kullanıcı kimlikleri** · toplanır · zorunlu · Uygulama işlevselliği |
+| Toplam skor | Uygulama etkinliği → **Uygulama işlemleri** · toplanır · zorunlu · Uygulama işlevselliği |
+| **Reklam kimliği (AdMob)** | Cihaz veya diğer kimlikler → **Cihaz kimlikleri** · toplanır **ve paylaşılır** · Reklamlar/pazarlama + Analiz |
 | Aktarım şifreli mi? | **Evet** (HTTPS) |
-| Kullanıcı silinmesini isteyebilir mi? | **Evet** (gizlilik politikasındaki adres üzerinden) |
-| Veri paylaşılıyor mu (3. taraflara)? | **Hayır** |
-| Reklam/analitik amaçlı kullanım? | **Hayır** |
+| Silme talebi | **Evet** — https://tahacimen.github.io/Huelly/ |
+| 3. tarafla paylaşım | **Evet** — reklam kimliği/verisi Google (AdMob) ile |
 
-> Not: takma ad sıralama tablosunda herkese açık görünür; bu, gizlilik
-> politikasında açıkça belirtilmiştir.
+> Notlar: (1) takma ad sıralama tablosunda herkese açıktır. (2) AdMob'un topladığı
+> reklam verisi için Google'ın kendi beyanları geçerlidir; "Cihaz kimlikleri"ni
+> reklam amaçlı toplanan+paylaşılan olarak işaretlemek AdMob için standarttır.
 
 ## Gizlilik politikası URL'si
 
-**Zorunlu.** `PRIVACY.md` herkese açık bir adreste yayınlanmalı ve URL'si buraya
-girilmeli. (Henüz yayınlanmadı — iletişim adresi de doldurulmalı.)
+**Zorunlu.** Canlı ve hazır:
+
+```
+https://tahacimen.github.io/Huelly/
+```
 
 ---
 
@@ -148,11 +157,10 @@ girilmeli. (Henüz yayınlanmadı — iletişim adresi de doldurulmalı.)
 |--------|-------|-------|
 | Uygulama ikonu 512×512 | `store/icon-512.png` | ✅ |
 | Tanıtım görseli 1024×500 | `store/feature-graphic.png` | ✅ |
-| Telefon ekran görüntüleri (min. 2) | `store/screenshots/` | ✅ 5 adet |
+| Telefon ekran görüntüleri — İngilizce | `store/screenshots/en/` | ✅ 5 adet |
+| Telefon ekran görüntüleri — Türkçe | `store/screenshots/tr/` | ✅ 5 adet |
 
-Ekran görüntüleri 1080×2424 (Pixel 9 emülatörü). Play'in telefon için istediği
-sınırlar içinde: en az 320 px, en fazla 3840 px, en-boy oranı 9:16'ya yakın.
-
-> Oynanış görüntülerinde skor 0 görünüyor; bunlar otomasyonla çekildi. Daha
-> gösterişli bir kare istersen oyunu birkaç dakika oynayıp kendi ekran
-> görüntünü alman yeterli — dosyayı aynı isimle değiştir.
+Her dilde 5 kare: başlık, seviye haritası, zorluk seçimi, oynanış (gerçek skorla),
+seviye tamamlandı. 1080×2424 (Pixel 9), Play'in telefon sınırları içinde
+(320–3840 px). İngilizce mağaza sayfasına `en/`, Türkçe çeviriye `tr/` görsellerini
+yükle.
