@@ -20,13 +20,19 @@ async function run() {
     .toFile(OUT('icon-512.png'));
   console.log('store/icon-512.png  512x512');
 
-  // Feature graphic: exactly 1024x500, no alpha.
-  await sharp(A('feature-graphic.svg'), { density: 200 })
-    .resize(1024, 500)
-    .flatten({ background: '#121220' })
-    .png()
-    .toFile(OUT('feature-graphic.png'));
-  console.log('store/feature-graphic.png  1024x500');
+  // Feature graphic: exactly 1024x500, no alpha. One per listing language —
+  // English tagline for the default listing, Turkish for the tr-TR translation.
+  for (const [svg, out] of [
+    ['feature-graphic.svg',    'feature-graphic.png'],     // English (default)
+    ['feature-graphic-tr.svg', 'feature-graphic-tr.png'],  // Turkish
+  ]) {
+    await sharp(A(svg), { density: 200 })
+      .resize(1024, 500)
+      .flatten({ background: '#121220' })
+      .png()
+      .toFile(OUT(out));
+    console.log('store/' + out + '  1024x500');
+  }
 }
 
 run().catch(e => { console.error('FAILED:', e.message); process.exit(1); });

@@ -712,16 +712,26 @@ document.querySelectorAll('.diff-card').forEach(c => c.onclick = () => startGame
    in a browser, or if the plugin is missing, every method is a
    safe no-op, so the game plays identically everywhere else.
 
-   The ad-unit ids below are GOOGLE'S OFFICIAL TEST ids: they serve
-   test ads and can NEVER earn money. To go live, replace these AND
-   the app id in android/app/src/main/AndroidManifest.xml with the
-   real ids from your AdMob account, and set isTesting = false.
+   Ad-unit ids differ per platform. Android uses the real Huelly ids; iOS still
+   holds GOOGLE'S TEST ids — create an iOS app + ad units in AdMob and paste the
+   real ones into IDS.ios. The per-platform APP ids live natively:
+   Android → AndroidManifest.xml, iOS → Info.plist (GADApplicationIdentifier).
    ============================================================ */
 const ADS = {
-  interstitialId: 'ca-app-pub-8892489378986653/5383695321', // Huelly interstitial
-  rewardedId:     'ca-app-pub-8892489378986653/5192123632', // Huelly rewarded
-  isTesting: false,                                           // real ads in production
+  IDS: {
+    android: {
+      interstitial: 'ca-app-pub-8892489378986653/5383695321', // Huelly Android
+      rewarded:     'ca-app-pub-8892489378986653/5192123632',
+    },
+    ios: {
+      interstitial: 'ca-app-pub-3940256099942544/4411468910', // TEST — replace
+      rewarded:     'ca-app-pub-3940256099942544/1712485313', // TEST — replace
+    },
+  },
+  isTesting: false,        // real ads in production
 
+  interstitialId: '',      // resolved from the running platform in init()
+  rewardedId: '',
   _plugin: null,
   _interstitialReady: false,
   _rewardedReady: false,
@@ -736,7 +746,16 @@ const ADS = {
     if (!Cap || !Cap.isNativePlatform || !Cap.isNativePlatform() ||
         !Cap.Plugins || !Cap.Plugins.AdMob) return;   // browser / plugin absent → no-op
     this._plugin = Cap.Plugins.AdMob;
+    const platform = (Cap.getPlatform && Cap.getPlatform()) || 'android';
+    const ids = this.IDS[platform] || this.IDS.android;
+    this.interstitialId = ids.interstitial;
+    this.rewardedId = ids.rewarded;
     try {
+      // iOS: ask for tracking permission first (App Tracking Transparency).
+      // No-op on Android; ads still serve (non-personalized) if the user declines.
+      if (platform === 'ios' && this._plugin.requestTrackingAuthorization) {
+        try { await this._plugin.requestTrackingAuthorization(); } catch(e){}
+      }
       await this._plugin.initialize({ initializeForTesting: this.isTesting });
       this._plugin.addListener('interstitialAdLoaded',       () => { this._interstitialReady = true; });
       this._plugin.addListener('interstitialAdFailedToLoad', () => { this._interstitialReady = false; });

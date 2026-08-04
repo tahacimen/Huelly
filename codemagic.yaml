@@ -1,0 +1,57 @@
+# Codemagic CI — builds the iOS app in the cloud (no Mac needed) and ships it to
+# TestFlight / App Store. Capacitor 8 uses Swift Package Manager, so there is no
+# CocoaPods step; xcodebuild resolves the packages during the archive.
+#
+# ── Before the first run, do these in the Codemagic web UI ────────────────────
+#   1. Add an App Store Connect API key (Team integrations → App Store Connect).
+#      Note the integration name and put it under `integrations.app_store_connect`.
+#   2. Register the app in App Store Connect with bundle id  com.tahacimen.huelly
+#      and copy its numeric Apple ID into APP_STORE_APPLE_ID below.
+#   3. Codemagic manages the signing certificate + provisioning profile
+#      automatically from that API key (distribution_type: app_store).
+# ──────────────────────────────────────────────────────────────────────────────
+
+workflows:
+  ios-appstore:
+    name: Huelly iOS — App Store
+    instance_type: mac_mini_m2
+    max_build_duration: 60
+    integrations:
+      # Rename to match the API-key integration you created in Codemagic.
+      app_store_connect: HuellyAppStoreKey
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.tahacimen.huelly
+      vars:
+        XCODE_PROJECT: "ios/App/App.xcodeproj"
+        XCODE_SCHEME: "App"
+        # Numeric Apple ID of the app in App Store Connect (App Information → General).
+        APP_STORE_APPLE_ID: 0000000000
+      node: 20
+      xcode: latest
+    scripts:
+      - name: Install npm dependencies
+        script: npm ci
+      - name: Copy web assets into the iOS project
+        script: npx cap sync ios
+      - name: Apply managed signing to the Xcode project
+        script: xcode-project use-profiles
+      - name: Set the build number to one above the latest TestFlight build
+        script: |
+          BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" || echo 0)
+          cd ios/App
+          agvtool new-version -all $((BUILD_NUMBER + 1))
+      - name: Build the signed .ipa
+        script: |
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        # Uploads to TestFlight. Flip to a production release only after review.
+        submit_to_testflight: true

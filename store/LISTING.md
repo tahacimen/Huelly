@@ -156,7 +156,8 @@ https://tahacimen.github.io/Huelly/
 | Varlık | Dosya | Durum |
 |--------|-------|-------|
 | Uygulama ikonu 512×512 | `store/icon-512.png` | ✅ |
-| Tanıtım görseli 1024×500 | `store/feature-graphic.png` | ✅ |
+| Tanıtım görseli 1024×500 — İngilizce | `store/feature-graphic.png` | ✅ |
+| Tanıtım görseli 1024×500 — Türkçe | `store/feature-graphic-tr.png` | ✅ |
 | Telefon ekran görüntüleri — İngilizce | `store/screenshots/en/` | ✅ 5 adet |
 | Telefon ekran görüntüleri — Türkçe | `store/screenshots/tr/` | ✅ 5 adet |
 
