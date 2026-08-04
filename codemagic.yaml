@@ -7,8 +7,8 @@
 #      Note the integration name and put it under `integrations.app_store_connect`.
 #   2. Register the app in App Store Connect with bundle id  com.tahacimen.huelly
 #      and copy its numeric Apple ID into APP_STORE_APPLE_ID below.
-#   3. The build creates the distribution certificate + provisioning profile on
-#      its first run (fetch-signing-files --create), using that API key.
+#   3. Upload the distribution certificate and App Store provisioning profile
+#      in Codemagic's Code signing identities settings.
 # ──────────────────────────────────────────────────────────────────────────────
 
 workflows:
@@ -20,6 +20,11 @@ workflows:
       # Rename to match the API-key integration you created in Codemagic.
       app_store_connect: HuellyAppStoreKey
     environment:
+      ios_signing:
+        certificates:
+          - huelly_distribution_p12
+        provisioning_profiles:
+          - huelly_appstore_profile
       vars:
         BUNDLE_ID: "com.tahacimen.huelly"
         XCODE_PROJECT: "ios/App/App.xcodeproj"
@@ -33,17 +38,6 @@ workflows:
         script: npm ci
       - name: Copy web assets into the iOS project
         script: npx cap sync ios
-      - name: Prepare the signing keychain
-        script: keychain initialize
-      - name: Fetch or CREATE the distribution certificate + provisioning profile
-        # --create makes the profile/certificate on first run (none exist yet),
-        # using the App Store Connect API key from the integration above.
-        script: |
-          app-store-connect fetch-signing-files "$BUNDLE_ID" \
-            --type IOS_APP_STORE \
-            --create
-      - name: Add the fetched certificate to the keychain
-        script: keychain add-certificates
       - name: Apply the provisioning profile to the Xcode project
         script: xcode-project use-profiles
       - name: Set the build number to one above the latest TestFlight build
