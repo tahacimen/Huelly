@@ -26,7 +26,7 @@ workflows:
         XCODE_SCHEME: "App"
         # Numeric Apple ID of the app in App Store Connect (App Information → General).
         APP_STORE_APPLE_ID: 6797831832
-      node: 20
+      node: 22
       xcode: latest
     scripts:
       - name: Install npm dependencies
