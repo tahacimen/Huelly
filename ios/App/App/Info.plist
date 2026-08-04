@@ -49,11 +49,10 @@
 	<true/>
 
 	<!-- ===== AdMob (iOS) ===== -->
-	<!-- iOS AdMob app id. This is GOOGLE'S OFFICIAL TEST id — replace it with the
-	     real one from your AdMob iOS app (ca-app-pub-XXXX~YYYY). The matching
-	     iOS ad-unit ids live in www/index.html (AD_IDS.ios). -->
+	<!-- Real iOS AdMob app id for Huelly. The matching iOS ad-unit ids live in
+	     www/index.html (AD_IDS.ios). -->
 	<key>GADApplicationIdentifier</key>
-	<string>ca-app-pub-3940256099942544~1458002511</string>
+	<string>ca-app-pub-8892489378986653~5613076830</string>
 
 	<!-- App Tracking Transparency: shown once, before ads init, so iOS can serve
 	     personalized ads. Declining still allows (non-personalized) ads. -->
