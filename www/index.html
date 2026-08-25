@@ -733,7 +733,10 @@ function startGame(lvl, diff){
   $('hud-score').textContent = '0';
   $('spd-btn').textContent = G.boost + '×';
   updateLives(); buildInputUI(); show('game');
-  requestAnimationFrame(() => { initConveyor(); G.lastT = null; requestAnimationFrame(tick); });
+  // Defer one turn so the playfield has measured its size, but use setTimeout,
+  // not rAF — a 0 ms timeout fires even where rAF is paused, so startup never
+  // hangs before the first strip appears.
+  setTimeout(() => { if (!G) return; initConveyor(); startLoop(); }, 0);
 }
 
 function updateLives(){ $('hud-lives').textContent = '❤'.repeat(G.lives) || '—'; }
@@ -817,8 +820,12 @@ function advanceConveyor(){
   renderConveyor();
 }
 
+/* One simulation step. The scheduling lives in startLoop() below — tick() never
+   reschedules itself, so it can be driven by requestAnimationFrame OR by the
+   watchdog timer without ever double-stepping. */
 function tick(t){
   if (!G || !G.running) return;
+  G._lastWall = performance.now();          // watchdog: proof a frame just ran
   if (G.lastT == null) G.lastT = t;
   const dt = Math.min((t - G.lastT)/1000, 0.05);
   G.lastT = t;
@@ -837,7 +844,31 @@ function tick(t){
     renderConveyor();
     if (activeY() >= G.maxY) stripLanded();
   }
-  requestAnimationFrame(tick);
+}
+
+/* Game-loop driver. requestAnimationFrame gives smooth play when the page is
+   visible, but some embed contexts (the inline chat preview, hidden/offscreen
+   iframes) pause rAF entirely, which used to freeze the game the moment it
+   started — "oynanmıyor". A setInterval watchdog keeps stepping the sim when rAF
+   goes quiet, so the game always runs; when rAF is healthy the 200 ms threshold
+   is never reached and the watchdog stays dormant. */
+let _frameTimer = null;
+function stopLoop(){ if (_frameTimer){ clearInterval(_frameTimer); _frameTimer = null; } }
+function startLoop(){
+  stopLoop();
+  if (!G) return;
+  G.lastT = null;
+  G._lastWall = performance.now();
+  const raf = () => {
+    if (!G || !G.running){ stopLoop(); return; }
+    tick(performance.now());
+    if (G && G.running) requestAnimationFrame(raf);
+  };
+  requestAnimationFrame(raf);
+  _frameTimer = setInterval(() => {
+    if (!G || !G.running){ stopLoop(); return; }
+    if (performance.now() - G._lastWall > 200) tick(performance.now());
+  }, 200);
 }
 
 function stripLanded(){
@@ -869,7 +900,7 @@ function reviveGame(){
   G.lives = 1; updateLives();
   G.running = true; G.locked = false; G.lastT = null;
   initConveyor();
-  requestAnimationFrame(tick);
+  startLoop();
 }
 $('btn-continue').onclick = () => {
   $('continue-overlay').classList.remove('show');
@@ -948,7 +979,7 @@ function fire(){
 }
 
 /* ---------- end / quit ---------- */
-$('btn-quit').onclick = () => { if(G){ G.running=false; G=null; } show('levels'); };
+$('btn-quit').onclick = () => { stopLoop(); if(G){ G.running=false; G=null; } show('levels'); };
 
 /* `survived` = the clock ran out with lives to spare. That alone is not enough
    to clear a level: on Slow the early levels hand out more lives than there are
@@ -956,6 +987,7 @@ $('btn-quit').onclick = () => { if(G){ G.running=false; G=null; } show('levels')
    Clearing also requires landing at least one match. */
 async function endGame(survived){
   G.running = false;
+  stopLoop();
   $('continue-overlay').classList.remove('show');
   const {lvl, diff, score} = G;
   const key = lvl+':'+diff;
