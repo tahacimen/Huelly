@@ -104,6 +104,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .lvl:active{transform:scale(.94)}
 .lvl.locked{opacity:.35;pointer-events:none}
 .lvl.locked::after{content:"🔒";font-size:.9rem;position:absolute;bottom:6px}
+.lvl .lvl-info{font-size:.6rem;font-weight:600;color:var(--ink-dim);letter-spacing:.2px;line-height:1}
 .lvl .stars{display:flex;gap:3px;height:7px}
 .lvl .stars i{width:7px;height:7px;border-radius:50%;background:var(--panel2)}
 .lvl .stars i.s1.on{background:var(--good)}
@@ -329,6 +330,7 @@ const STRINGS = {
     start:'Oynamaya başla',
     back:'← Geri',
     points:'{n} puan',
+    cardBlocks:'{n} blok',
     admin:'YÖNETİCİ',
     levelN:'Seviye {n}',
     diff_slow:'Yavaş', diff_medium:'Orta', diff_fast:'Hızlı', diff_extreme:'Ekstrem',
@@ -366,6 +368,7 @@ const STRINGS = {
     start:'Start playing',
     back:'← Back',
     points:'{n} pts',
+    cardBlocks:'{n} blocks',
     admin:'ADMIN',
     levelN:'Level {n}',
     diff_slow:'Slow', diff_medium:'Medium', diff_fast:'Fast', diff_extreme:'Extreme',
@@ -446,11 +449,12 @@ const CONFIG = {
   // Falling speed AND points earned are multiplied by the chosen boost.
   SPEED_BOOSTS: [1, 1.5, 2, 3],
 
-  // Per-level scaling
-  // Capped at 7: past that the strip stops testing reactions and just
-  // overruns working memory, which tops out around 7 items.
-  seqLen:    lvl => Math.min(3 + Math.floor((lvl - 1) / 6), 7),        // blocks in the strip: 3 → 7
-  colorCount:(lvl, d) => Math.min(3 + Math.floor((lvl - 1) / 8) + CONFIG.DIFFS[d].extraColors, 7),
+  // Per-level scaling. Blocks step every 4 levels, colours every 5 (offset by 2),
+  // so something changes roughly every other level — each level feels distinct
+  // instead of a long band of identical ones. Both capped at 7 (working-memory
+  // limit / the size of the palette).
+  seqLen:    lvl => Math.min(3 + Math.floor((lvl - 1) / 4), 7),        // blocks: 3 → 7 by level 17
+  colorCount:(lvl, d) => Math.min(3 + Math.floor((lvl + 1) / 5) + CONFIG.DIFFS[d].extraColors, 7),
   levelTime: lvl => 30 + Math.min(lvl, 15),                            // seconds to survive: 31 → 45
 
   // Seconds allowed per block, before the difficulty speed multiplier.
@@ -571,7 +575,9 @@ function renderLevels(){
     const anyDone = CONFIG.DIFF_ORDER.some(d => player.best[i+':'+d] != null);
     if (i > player.unlocked && !adminMode) b.classList.add('locked');
     if (anyDone) b.classList.add('done');
-    b.innerHTML = i + `<span class="stars">
+    b.innerHTML = i
+      + `<small class="lvl-info">${t('cardBlocks', { n: CONFIG.seqLen(i) })}</small>`
+      + `<span class="stars">
       <i class="s1 ${player.best[i+':slow']!=null?'on':''}"></i>
       <i class="s2 ${player.best[i+':medium']!=null?'on':''}"></i>
       <i class="s3 ${player.best[i+':fast']!=null?'on':''}"></i>
