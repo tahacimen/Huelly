@@ -75,6 +75,17 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .icon-btn{background:var(--panel);border-radius:10px;padding:8px 12px;font-weight:700;font-size:.85rem;color:var(--ink-dim)}
 .icon-btn:active{filter:brightness(1.3)}
 
+/* ---------- home (landing) ---------- */
+#screen-home{justify-content:center;align-items:center;gap:10px;text-align:center}
+#screen-home p{color:var(--ink-dim);font-size:.95rem;max-width:280px;margin-bottom:14px}
+#screen-home .btn{max-width:300px;margin-top:8px}
+.lang-btn{
+  position:absolute;top:max(14px,env(safe-area-inset-top));right:16px;
+  background:var(--panel);border-radius:10px;padding:8px 14px;
+  font-weight:800;font-size:.85rem;color:var(--ink-dim);letter-spacing:.06em;
+}
+.lang-btn:active{filter:brightness(1.4)}
+
 /* ---------- level select ---------- */
 #player-chip{display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
 #player-chip b{font-size:1rem}
@@ -213,8 +224,21 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 <body>
 <div id="app">
 
-  <!-- LEVEL SELECT (first screen — no sign-up, play straight away) -->
-  <div class="screen active" id="screen-levels">
+  <!-- HOME (landing) — brand + Play, no sign-up -->
+  <div class="screen active" id="screen-home">
+    <div class="brand-dots">
+      <span style="background:#FF4757"></span><span style="background:#FFA502"></span>
+      <span style="background:#FFDD3C"></span><span style="background:#2ED573"></span>
+      <span style="background:#1E90FF"></span>
+    </div>
+    <div class="brand">Huel<span class="fire">ly</span></div>
+    <p data-i18n="tagline">Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.</p>
+    <button class="btn" id="btn-play" data-i18n="start">Oynamaya başla</button>
+    <button class="lang-btn" id="btn-lang-home">EN</button>
+  </div>
+
+  <!-- LEVEL SELECT -->
+  <div class="screen" id="screen-levels">
     <div class="topbar">
       <div id="player-chip"><b>Huel<span style="color:var(--accent)">ly</span></b><small id="chip-score"></small></div>
       <button class="icon-btn" id="btn-lang">EN</button>
@@ -301,6 +325,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
    ============================================================ */
 const STRINGS = {
   tr: {
+    tagline:'Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.',
+    start:'Oynamaya başla',
     back:'← Geri',
     points:'{n} puan',
     admin:'YÖNETİCİ',
@@ -336,6 +362,8 @@ const STRINGS = {
     continueGiveUp:'Vazgeç',
   },
   en: {
+    tagline:'Copy the falling color code before it lands. Match it — and it fires automatically.',
+    start:'Start playing',
     back:'← Back',
     points:'{n} pts',
     admin:'ADMIN',
@@ -393,8 +421,8 @@ function applyI18n(){
     el.title = t(el.dataset.i18nTitle);
   });
   // The toggle advertises the language it switches TO, not the current one.
-  const b = $('btn-lang');
-  if (b) b.textContent = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length].toUpperCase();
+  const other = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length].toUpperCase();
+  ['btn-lang','btn-lang-home'].forEach(id => { const b = $(id); if (b) b.textContent = other; });
 }
 
 /* ============================================================
@@ -503,7 +531,7 @@ let pendingLevel = 1;
 let adminMode = false;   // unlocks all levels for testing; admin runs don't save scores
 
 const $ = id => document.getElementById(id);
-const screens = ['levels','diff','game','result'];
+const screens = ['home','levels','diff','game','result'];
 function show(name){
   screens.forEach(s => $('screen-'+s).classList.toggle('active', s===name));
 }
@@ -512,6 +540,9 @@ const totalScore = p => Object.values(p.best||{}).reduce((a,b)=>a+b,0);
 
 /* Progress is saved locally only — no nickname, no server. */
 async function savePlayer(){ await store.set('player', player); }
+
+/* Home → level map */
+$('btn-play').onclick = () => { renderLevels(); show('levels'); };
 
 /* Admin mode: tap the Huelly chip 7 times quickly to toggle.
    Unlocks every level for testing; admin runs are never saved. */
@@ -990,6 +1021,7 @@ function setLang(next){
 
 const toggleLang = () => setLang(LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length]);
 $('btn-lang').onclick = toggleLang;
+$('btn-lang-home').onclick = toggleLang;
 
 lang = detectLang();
 applyI18n();
@@ -1002,7 +1034,7 @@ ADS.init();   // no-op in a browser; sets up AdMob in the native app
   if (!player.unlocked) player.unlocked = 1;
   await store.set('player', player);
   renderLevels();
-  show('levels');
+  show('home');
 })();
 </script>
 </body>
