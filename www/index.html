@@ -164,9 +164,13 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   background:repeating-linear-gradient(90deg,var(--bad) 0 12px,transparent 12px 24px);
   opacity:.7;
 }
-.strip{position:absolute;left:0;right:0;display:flex;gap:2px;padding:0 8px;will-change:top}
+.strip{position:absolute;left:0;right:0;display:flex;gap:2px;padding:0 8px;will-change:top,transform;transform-origin:center}
 .strip .cell{flex:1;aspect-ratio:1;max-height:38px;border-radius:6px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.3)}
-#fire-strip{transition:top .22s cubic-bezier(.2,0,.4,1)}
+/* Conveyor: the active (lowest) strip is full; upcoming previews are dimmed and
+   scaled down (set inline per depth) and never intercept taps. */
+.strip.active{z-index:3}
+.strip.preview{z-index:2;pointer-events:none;filter:saturate(.8)}
+#fire-strip{transition:top .22s cubic-bezier(.2,0,.4,1);z-index:4}
 .particle{position:absolute;width:6px;height:6px;border-radius:50%;pointer-events:none;animation:fade .5s forwards}
 @keyframes fade{to{opacity:0;transform:translateY(30px) scale(.3)}}
 .boom{position:absolute;font-size:2rem;font-weight:900;color:var(--accent);pointer-events:none;animation:boomUp .6s forwards;text-shadow:0 2px 8px rgba(0,0,0,.5)}
@@ -518,6 +522,12 @@ const CONFIG = {
   // Scoring: (20 + 80 × heightFraction) × diffMult × levelBonus
   points: (heightFrac, lvl, d) =>
     Math.round((20 + 80 * heightFrac) * CONFIG.DIFFS[d].mult * (1 + (lvl - 1) * 0.05)),
+
+  // Conveyor: a train of strips descends — only the lowest is the active target,
+  // the ones above it are a dimmed preview of what's coming. previews = how many
+  // upcoming strips to show; gapFrac = vertical spacing as a fraction of the
+  // playfield; speedFactor slows the descent so the packed train stays playable.
+  CONVEYOR: { previews: 3, gapFrac: 0.16, speedFactor: 1.6 },
 };
 
 /* ============================================================
@@ -820,6 +830,7 @@ function startGame(lvl, diff){
     fallTime: CONFIG.fallTime(lvl, diff),
     score: 0,
     target: [], playerArr: [],
+    queue: [],                 // conveyor: [active, ...previews]
     y: 0, maxY: 1,
     running: true, locked: false, lastT: null,
     boost: player.boost || 1,
@@ -829,7 +840,7 @@ function startGame(lvl, diff){
   $('hud-score').textContent = '0';
   $('spd-btn').textContent = G.boost + '×';
   updateLives(); buildInputUI(); show('game');
-  requestAnimationFrame(() => { spawnStrip(); G.lastT = null; requestAnimationFrame(tick); });
+  requestAnimationFrame(() => { initConveyor(); G.lastT = null; requestAnimationFrame(tick); });
 }
 
 function updateLives(){ $('hud-lives').textContent = '❤'.repeat(G.lives) || '—'; }
@@ -858,25 +869,58 @@ function buildInputUI(){
   });
 }
 
-function spawnStrip(){
-  const old = $('target-strip'); if (old) old.remove();
-  // Extreme: the color panel re-arranges itself before every new strip
+/* ---------- conveyor: a descending train of strips ---------- */
+const pfH = () => $('playfield').clientHeight;
+const conveyorGap = () => pfH() * CONFIG.CONVEYOR.gapFrac;
+// The active never rises above this line, so previews always have room above it.
+const conveyorSpawnY = () => conveyorGap() * CONFIG.CONVEYOR.previews + pfH() * 0.02;
+const randTarget = () => Array.from({length:G.seqLen}, () => G.palette[Math.floor(Math.random()*G.palette.length)]);
+
+function makeStrip(target){
+  const el = document.createElement('div');
+  el.className = 'strip';
+  target.forEach(c => { const cell=document.createElement('div'); cell.className='cell'; cell.style.background=c; el.appendChild(cell); });
+  $('playfield').appendChild(el);
+  return { target, el };
+}
+
+/* Position every strip in the train and dim/scale the previews by depth. */
+function renderConveyor(){
+  const gap = conveyorGap();
+  G.queue.forEach((s, i) => {
+    s.el.style.top = (G.y - i*gap) + 'px';
+    s.el.classList.toggle('active', i===0);
+    s.el.classList.toggle('preview', i>0);
+    s.el.style.opacity   = i===0 ? '1' : String(Math.max(0.22, 0.62 - (i-1)*0.16));
+    s.el.style.transform = i===0 ? 'scale(1)' : 'scale(' + (0.9 - (i-1)*0.06) + ')';
+  });
+}
+
+function initConveyor(){
+  [...$('playfield').querySelectorAll('.strip')].forEach(s => s.remove());
+  G.queue = [];
+  for (let i=0; i <= CONFIG.CONVEYOR.previews; i++) G.queue.push(makeStrip(randTarget()));
+  G.maxY = pfH() - 44;                 // where the active "lands"
+  G.y = conveyorSpawnY();
+  G.target = G.queue[0].target;
+  G.playerArr = []; renderPlayerGrid();
+  renderConveyor();
+}
+
+/* Retire the lowest strip and bring in a fresh one at the top. The survivors keep
+   their positions (the train just shifts up one slot), so it flows smoothly. */
+function advanceConveyor(){
+  const gone = G.queue.shift(); if (gone) gone.el.remove();
+  G.queue.push(makeStrip(randTarget()));
+  G.y = Math.max(G.y - conveyorGap(), conveyorSpawnY());
+  G.target = G.queue[0].target;
+  G.playerArr = []; renderPlayerGrid();
+  // Extreme: reshuffle the palette buttons for the new active target
   if (CONFIG.DIFFS[G.diff].shuffle){
-    for (let i = G.palette.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      [G.palette[i], G.palette[j]] = [G.palette[j], G.palette[i]];
-    }
+    for (let i = G.palette.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [G.palette[i],G.palette[j]]=[G.palette[j],G.palette[i]]; }
     buildInputUI();
   }
-  G.target = Array.from({length:G.seqLen}, () => G.palette[Math.floor(Math.random()*G.palette.length)]);
-  G.playerArr = []; renderPlayerGrid();
-  const strip = document.createElement('div');
-  strip.className='strip'; strip.id='target-strip';
-  G.target.forEach(c => { const cell=document.createElement('div'); cell.className='cell'; cell.style.background=c; strip.appendChild(cell); });
-  $('playfield').appendChild(strip);
-  G.y = -40;
-  G.maxY = $('playfield').clientHeight - 44;   // where the strip "lands"
-  strip.style.top = G.y + 'px';
+  renderConveyor();
 }
 
 function tick(t){
@@ -892,11 +936,10 @@ function tick(t){
   $('hud-timer').classList.toggle('low', tl <= 10);
   if (G.timeLeft <= 0) return endGame(true);
 
-  // descend
+  // descend the whole train (slowed a touch since the strips are packed)
   if (!G.locked){
-    G.y += ($('playfield').clientHeight / G.fallTime) * G.boost * dt;
-    const strip = $('target-strip');
-    if (strip) strip.style.top = G.y + 'px';
+    G.y += (pfH() / (G.fallTime * CONFIG.CONVEYOR.speedFactor)) * G.boost * dt;
+    renderConveyor();
     if (G.y >= G.maxY) stripLanded();
   }
   requestAnimationFrame(tick);
@@ -912,7 +955,7 @@ function stripLanded(){
     setTimeout(() => offerContinueOrEnd(), 450);
     return;
   }
-  setTimeout(()=>{ if(G && G.running){ spawnStrip(); G.locked=false; } }, 550);
+  setTimeout(()=>{ if(G && G.running){ advanceConveyor(); G.locked=false; } }, 450);
 }
 
 /* Out of lives: offer a rewarded-ad revive if one is ready (once per game),
@@ -930,8 +973,7 @@ function reviveGame(){
   G.reviveUsed = true;
   G.lives = 1; updateLives();
   G.running = true; G.locked = false; G.lastT = null;
-  const s = $('target-strip'); if (s) s.remove();
-  spawnStrip();
+  initConveyor();
   requestAnimationFrame(tick);
 }
 $('btn-continue').onclick = () => {
@@ -978,6 +1020,9 @@ function fire(){
   $('player-grid').classList.add('match-ok');
   beep(660,.07); setTimeout(()=>beep(880,.07),70); setTimeout(()=>beep(1320,.1),140);
 
+  // hide the matched (active) strip while its projectile copy flies up
+  if (G.queue[0]) G.queue[0].el.style.visibility = 'hidden';
+
   // projectile: a copy of the matched strip flies up from the bottom
   const proj = document.createElement('div');
   proj.className='strip'; proj.id='fire-strip';
@@ -997,14 +1042,13 @@ function fire(){
   requestAnimationFrame(()=>{ proj.style.top = G.y + 'px'; });
   setTimeout(()=>{
     proj.remove();
-    const strip = $('target-strip'); if (strip) strip.remove();
     const boom=document.createElement('div'); boom.className='boom';
     boom.textContent='+'+pts;
     boom.style.top=Math.max(G.y,10)+'px'; boom.style.left='50%'; boom.style.transform='translateX(-50%)';
     pf.appendChild(boom); setTimeout(()=>boom.remove(),650);
     $('flash').className='green'; setTimeout(()=>$('flash').className='',350);
     $('player-grid').classList.remove('match-ok');
-    if (G && G.running){ spawnStrip(); G.locked=false; }
+    if (G && G.running){ advanceConveyor(); G.locked=false; }
   }, 240);
 }
 
