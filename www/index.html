@@ -164,12 +164,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   background:repeating-linear-gradient(90deg,var(--bad) 0 12px,transparent 12px 24px);
   opacity:.7;
 }
-.strip{position:absolute;left:0;right:0;display:flex;gap:2px;padding:0 8px;will-change:top,transform;transform-origin:center}
+.strip{position:absolute;left:0;right:0;display:flex;gap:2px;padding:0 8px;will-change:top}
 .strip .cell{flex:1;aspect-ratio:1;max-height:38px;border-radius:6px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.3)}
-/* Conveyor: the active (lowest) strip is full; upcoming previews are dimmed and
-   scaled down (set inline per depth) and never intercept taps. */
-.strip.active{z-index:3}
-.strip.preview{z-index:2;pointer-events:none;filter:saturate(.8)}
 #fire-strip{transition:top .22s cubic-bezier(.2,0,.4,1);z-index:4}
 .particle{position:absolute;width:6px;height:6px;border-radius:50%;pointer-events:none;animation:fade .5s forwards}
 @keyframes fade{to{opacity:0;transform:translateY(30px) scale(.3)}}
@@ -523,11 +519,12 @@ const CONFIG = {
   points: (heightFrac, lvl, d) =>
     Math.round((20 + 80 * heightFrac) * CONFIG.DIFFS[d].mult * (1 + (lvl - 1) * 0.05)),
 
-  // Conveyor: a train of strips descends — only the lowest is the active target,
-  // the ones above it are a dimmed preview of what's coming. previews = how many
-  // upcoming strips to show; gapFrac = vertical spacing as a fraction of the
-  // playfield; speedFactor slows the descent so the packed train stays playable.
-  CONVEYOR: { previews: 3, gapFrac: 0.16, speedFactor: 1.6 },
+  // Conveyor: a continuous stream of identical strips slides down from the top.
+  // The lowest one (nearest the input row) is the active target; the rest are the
+  // next strips on their way down. previews = how many extra strips ride above the
+  // active; gapFrac = vertical spacing (fraction of the playfield); speedFactor
+  // slows the descent a touch so the packed stream stays playable.
+  CONVEYOR: { previews: 3, gapFrac: 0.08, speedFactor: 1.6 },
 };
 
 /* ============================================================
@@ -869,50 +866,51 @@ function buildInputUI(){
   });
 }
 
-/* ---------- conveyor: a descending train of strips ---------- */
+/* ---------- conveyor: a continuous stream of falling strips ----------
+   Every strip looks the same and slides down together from the top. The lowest
+   one (nearest the input row) is the active target the player matches; the ones
+   above it are simply the next strips on their way down. Each strip carries its
+   own y, so clearing the lowest just removes it and a fresh strip feeds in at
+   the top — a steady top-to-bottom stream. */
 const pfH = () => $('playfield').clientHeight;
 const conveyorGap = () => pfH() * CONFIG.CONVEYOR.gapFrac;
-// The active never rises above this line, so previews always have room above it.
-const conveyorSpawnY = () => conveyorGap() * CONFIG.CONVEYOR.previews + pfH() * 0.02;
+const activeY = () => (G.queue[0] ? G.queue[0].y : G.maxY);
 const randTarget = () => Array.from({length:G.seqLen}, () => G.palette[Math.floor(Math.random()*G.palette.length)]);
 
-function makeStrip(target){
+function makeStrip(target, y){
   const el = document.createElement('div');
   el.className = 'strip';
   target.forEach(c => { const cell=document.createElement('div'); cell.className='cell'; cell.style.background=c; el.appendChild(cell); });
+  el.style.top = y + 'px';
   $('playfield').appendChild(el);
-  return { target, el };
+  return { target, el, y };
 }
 
-/* Position every strip in the train and dim/scale the previews by depth. */
+/* Draw each strip at its own y — every strip identical, no dimming. */
 function renderConveyor(){
-  const gap = conveyorGap();
-  G.queue.forEach((s, i) => {
-    s.el.style.top = (G.y - i*gap) + 'px';
-    s.el.classList.toggle('active', i===0);
-    s.el.classList.toggle('preview', i>0);
-    s.el.style.opacity   = i===0 ? '1' : String(Math.max(0.22, 0.62 - (i-1)*0.16));
-    s.el.style.transform = i===0 ? 'scale(1)' : 'scale(' + (0.9 - (i-1)*0.06) + ')';
-  });
+  G.queue.forEach(s => { s.el.style.top = s.y + 'px'; });
+  G.y = activeY();                            // keep G.y = active for fire()/scoring
 }
 
 function initConveyor(){
   [...$('playfield').querySelectorAll('.strip')].forEach(s => s.remove());
-  G.queue = [];
-  for (let i=0; i <= CONFIG.CONVEYOR.previews; i++) G.queue.push(makeStrip(randTarget()));
-  G.maxY = pfH() - 44;                 // where the active "lands"
-  G.y = conveyorSpawnY();
+  G.maxY = pfH() - 44;                        // where the active "lands"
+  const gap = conveyorGap();
+  G.queue = [];                              // queue[0] = lowest (active), rest above
+  for (let i=0; i <= CONFIG.CONVEYOR.previews; i++){
+    G.queue.push(makeStrip(randTarget(), gap * (CONFIG.CONVEYOR.previews - i)));
+  }
   G.target = G.queue[0].target;
   G.playerArr = []; renderPlayerGrid();
   renderConveyor();
 }
 
-/* Retire the lowest strip and bring in a fresh one at the top. The survivors keep
-   their positions (the train just shifts up one slot), so it flows smoothly. */
+/* Clear the lowest strip and feed a fresh one in at the top; the survivors keep
+   falling from where they are, so the stream never jumps. */
 function advanceConveyor(){
   const gone = G.queue.shift(); if (gone) gone.el.remove();
-  G.queue.push(makeStrip(randTarget()));
-  G.y = Math.max(G.y - conveyorGap(), conveyorSpawnY());
+  const topY = G.queue.length ? G.queue[G.queue.length-1].y : 0;
+  G.queue.push(makeStrip(randTarget(), topY - conveyorGap()));
   G.target = G.queue[0].target;
   G.playerArr = []; renderPlayerGrid();
   // Extreme: reshuffle the palette buttons for the new active target
@@ -936,11 +934,12 @@ function tick(t){
   $('hud-timer').classList.toggle('low', tl <= 10);
   if (G.timeLeft <= 0) return endGame(true);
 
-  // descend the whole train (slowed a touch since the strips are packed)
+  // slide the whole stream down; the lowest touching the floor is a miss
   if (!G.locked){
-    G.y += (pfH() / (G.fallTime * CONFIG.CONVEYOR.speedFactor)) * G.boost * dt;
+    const dy = (pfH() / (G.fallTime * CONFIG.CONVEYOR.speedFactor)) * G.boost * dt;
+    G.queue.forEach(s => s.y += dy);
     renderConveyor();
-    if (G.y >= G.maxY) stripLanded();
+    if (activeY() >= G.maxY) stripLanded();
   }
   requestAnimationFrame(tick);
 }
