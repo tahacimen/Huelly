@@ -657,9 +657,15 @@ const ADS = {
     this.interstitialId = ids.interstitial;
     this.rewardedId = ids.rewarded;
     try {
-      // iOS: ask for tracking permission first (App Tracking Transparency).
+      // iOS shows the App Tracking Transparency prompt only while the app is
+      // in the foreground-active state. Requesting it during launch — as the
+      // WebView first evaluates this script — makes iOS silently skip the
+      // prompt (this is why App Review "could not locate" it). Wait until the
+      // app is actually visible/active first, THEN ask for tracking, and only
+      // then initialize AdMob (which reads the advertising identifier).
       // No-op on Android; ads still serve (non-personalized) if the user declines.
       if (platform === 'ios' && this._plugin.requestTrackingAuthorization) {
+        await this._whenActive();
         try { await this._plugin.requestTrackingAuthorization(); } catch(e){}
       }
       await this._plugin.initialize({ initializeForTesting: this.isTesting });
@@ -672,6 +678,23 @@ const ADS = {
       this._prepInterstitial();
       this._prepRewarded();
     } catch(e){ this._plugin = null; }
+  },
+
+  /* Resolve once the app is foreground-visible, plus a short settle delay so
+     iOS is reliably in the active state before we ask for tracking permission.
+     Without this the ATT prompt can be requested too early and never shown. */
+  _whenActive(){
+    return new Promise(resolve => {
+      const settle = () => setTimeout(resolve, 600);
+      if (document.visibilityState === 'visible') return settle();
+      const onVis = () => {
+        if (document.visibilityState === 'visible'){
+          document.removeEventListener('visibilitychange', onVis);
+          settle();
+        }
+      };
+      document.addEventListener('visibilitychange', onVis);
+    });
   },
 
   async _prepInterstitial(){ try { await this._plugin.prepareInterstitial({ adId: this.interstitialId }); } catch(e){ this._interstitialReady = false; } },
