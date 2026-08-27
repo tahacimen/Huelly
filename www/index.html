@@ -157,7 +157,10 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   opacity:.7;
 }
 .strip{position:absolute;left:0;right:0;display:flex;gap:2px;padding:0 8px;will-change:top}
-.strip .cell{flex:1;aspect-ratio:1;max-height:38px;border-radius:6px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.3)}
+.strip .cell{flex:1;aspect-ratio:1;max-height:38px;border-radius:6px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.3);transition:box-shadow .15s}
+/* The active (lowest) strip — the one you're matching — glows so it stands out
+   from the queue above it, without dimming any of the others. */
+.strip.active .cell{box-shadow:inset 0 -3px 0 rgba(0,0,0,.3),0 0 10px rgba(255,221,60,.55)}
 #fire-strip{transition:top .22s cubic-bezier(.2,0,.4,1);z-index:4}
 .particle{position:absolute;width:6px;height:6px;border-radius:50%;pointer-events:none;animation:fade .5s forwards}
 @keyframes fade{to{opacity:0;transform:translateY(30px) scale(.3)}}
@@ -474,7 +477,7 @@ const CONFIG = {
   // next strips on their way down. previews = how many extra strips ride above the
   // active; gapFrac = vertical spacing (fraction of the playfield); speedFactor
   // slows the descent a touch so the packed stream stays playable.
-  CONVEYOR: { previews: 3, gapFrac: 0.08, speedFactor: 1.6 },
+  CONVEYOR: { previews: 3, gapFrac: 0.19, speedFactor: 1.6 },
 };
 
 /* ============================================================
@@ -785,9 +788,14 @@ function makeStrip(target, y){
   return { target, el, y };
 }
 
-/* Draw each strip at its own y — every strip identical, no dimming. */
+/* Draw each strip at its own y. All strips are full colour; the lowest one (the
+   target you're matching) gets a glow so it's unmistakable, without dimming the
+   others. */
 function renderConveyor(){
-  G.queue.forEach(s => { s.el.style.top = s.y + 'px'; });
+  G.queue.forEach((s, i) => {
+    s.el.style.top = s.y + 'px';
+    s.el.classList.toggle('active', i === 0);
+  });
   G.y = activeY();                            // keep G.y = active for fire()/scoring
 }
 
@@ -795,9 +803,11 @@ function initConveyor(){
   [...$('playfield').querySelectorAll('.strip')].forEach(s => s.remove());
   G.maxY = pfH() - 44;                        // where the active "lands"
   const gap = conveyorGap();
-  G.queue = [];                              // queue[0] = lowest (active), rest above
+  G.queue = [];                              // queue[0] = active (starts at the top)
+  // Active sits at the very top; the rest wait ABOVE it (off-screen) and slide in
+  // one by one with a full gap between them — a spaced-out top-to-bottom stream.
   for (let i=0; i <= CONFIG.CONVEYOR.previews; i++){
-    G.queue.push(makeStrip(randTarget(), gap * (CONFIG.CONVEYOR.previews - i)));
+    G.queue.push(makeStrip(randTarget(), -gap * i));
   }
   G.target = G.queue[0].target;
   G.playerArr = []; renderPlayerGrid();
