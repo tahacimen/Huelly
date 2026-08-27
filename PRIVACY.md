@@ -16,9 +16,11 @@ sync.
 
 ## Özet / Summary
 
-- **Kendi topladığımız / We collect ourselves:** takma ad + toplam skor (Supabase,
-  Frankfurt) · nickname + total score.
+- **Kendi topladığımız / We collect ourselves:** hiçbir şey — oyun tamamen yereldir,
+  sunucu/hesap/sıralama yoktur · nothing — the game is fully local, no server, account
+  or leaderboard.
 - **Reklamlar / Ads:** Google AdMob — reklam kimliği ve reklam verisi Google
   tarafından işlenir · advertising ID and ad data processed by Google.
-- Reklam yok demiyoruz artık; oyunda AdMob reklamları var · the app shows AdMob ads.
+- Cihazdan çıkan tek veri reklam kimliğidir · the only data leaving the device is the
+  advertising ID.
 - İletişim / Contact: thcmnai@gmail.com

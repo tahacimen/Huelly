@@ -75,19 +75,10 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .icon-btn{background:var(--panel);border-radius:10px;padding:8px 12px;font-weight:700;font-size:.85rem;color:var(--ink-dim)}
 .icon-btn:active{filter:brightness(1.3)}
 
-/* ---------- signup ---------- */
-#screen-signup{justify-content:center;align-items:center;gap:10px;text-align:center}
-#screen-signup p{color:var(--ink-dim);font-size:.95rem;max-width:280px;margin-bottom:14px}
-#nick-input{
-  width:100%;max-width:300px;padding:15px;border-radius:var(--radius);
-  border:2px solid var(--panel2);background:var(--panel);color:var(--ink);
-  font-size:1.1rem;font-weight:700;text-align:center;outline:none;
-}
-#nick-input:focus{border-color:var(--accent)}
-#nick-error{color:var(--bad);font-size:.85rem;min-height:1.2em;margin-top:4px}
-#screen-signup .btn{max-width:300px;margin-top:8px}
-/* Language toggle. On sign-up it sits in the corner so a player who cannot
-   read the Turkish copy can still find it before doing anything else. */
+/* ---------- home (landing) ---------- */
+#screen-home{justify-content:center;align-items:center;gap:10px;text-align:center}
+#screen-home p{color:var(--ink-dim);font-size:.95rem;max-width:280px;margin-bottom:14px}
+#screen-home .btn{max-width:300px;margin-top:8px}
 .lang-btn{
   position:absolute;top:max(14px,env(safe-area-inset-top));right:16px;
   background:var(--panel);border-radius:10px;padding:8px 14px;
@@ -113,6 +104,7 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 .lvl:active{transform:scale(.94)}
 .lvl.locked{opacity:.35;pointer-events:none}
 .lvl.locked::after{content:"🔒";font-size:.9rem;position:absolute;bottom:6px}
+.lvl .lvl-info{font-size:.6rem;font-weight:600;color:var(--ink-dim);letter-spacing:.2px;line-height:1}
 .lvl .stars{display:flex;gap:3px;height:7px}
 .lvl .stars i{width:7px;height:7px;border-radius:50%;background:var(--panel2)}
 .lvl .stars i.s1.on{background:var(--good)}
@@ -165,8 +157,11 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
   opacity:.7;
 }
 .strip{position:absolute;left:0;right:0;display:flex;gap:2px;padding:0 8px;will-change:top}
-.strip .cell{flex:1;aspect-ratio:1;max-height:38px;border-radius:6px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.3)}
-#fire-strip{transition:top .22s cubic-bezier(.2,0,.4,1)}
+.strip .cell{flex:1;aspect-ratio:1;max-height:38px;border-radius:6px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.3);transition:box-shadow .15s}
+/* The active (lowest) strip — the one you're matching — glows so it stands out
+   from the queue above it, without dimming any of the others. */
+.strip.active .cell{box-shadow:inset 0 -3px 0 rgba(0,0,0,.3),0 0 10px rgba(255,221,60,.55)}
+#fire-strip{transition:top .22s cubic-bezier(.2,0,.4,1);z-index:4}
 .particle{position:absolute;width:6px;height:6px;border-radius:50%;pointer-events:none;animation:fade .5s forwards}
 @keyframes fade{to{opacity:0;transform:translateY(30px) scale(.3)}}
 .boom{position:absolute;font-size:2rem;font-weight:900;color:var(--accent);pointer-events:none;animation:boomUp .6s forwards;text-shadow:0 2px 8px rgba(0,0,0,.5)}
@@ -212,19 +207,6 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 #result-best{color:var(--ink-dim);font-size:.9rem;margin-bottom:18px}
 #screen-result .btn{max-width:300px;margin-top:8px}
 
-/* ---------- leaderboard ---------- */
-#lb-list{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding-bottom:20px}
-.lb-row{
-  display:flex;align-items:center;gap:12px;background:var(--panel);
-  border-radius:12px;padding:12px 14px;font-weight:700;
-}
-.lb-row .rank{width:2em;text-align:center;color:var(--ink-dim)}
-.lb-row.top1 .rank{color:var(--accent)}
-.lb-row .nick{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lb-row .pts{color:var(--accent)}
-.lb-row.me{outline:2px solid var(--accent)}
-.lb-empty{color:var(--ink-dim);text-align:center;margin-top:40px}
-
 /* ---------- continue (rewarded-ad revive) overlay ---------- */
 #continue-overlay{
   position:absolute;inset:0;z-index:20;display:none;
@@ -246,8 +228,8 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 <body>
 <div id="app">
 
-  <!-- SIGN UP -->
-  <div class="screen active" id="screen-signup">
+  <!-- HOME (landing) — brand + Play, no sign-up -->
+  <div class="screen active" id="screen-home">
     <div class="brand-dots">
       <span style="background:#FF4757"></span><span style="background:#FFA502"></span>
       <span style="background:#FFDD3C"></span><span style="background:#2ED573"></span>
@@ -255,21 +237,15 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
     </div>
     <div class="brand">Huel<span class="fire">ly</span></div>
     <p data-i18n="tagline">Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.</p>
-    <input id="nick-input" maxlength="14" data-i18n-ph="nickPlaceholder" autocomplete="off">
-    <div id="nick-error"></div>
-    <button class="btn" id="btn-join" data-i18n="start">Oynamaya başla</button>
-    <button class="lang-btn" id="btn-lang-signup">EN</button>
+    <button class="btn" id="btn-play" data-i18n="start">Oynamaya başla</button>
+    <button class="lang-btn" id="btn-lang-home">EN</button>
   </div>
 
   <!-- LEVEL SELECT -->
   <div class="screen" id="screen-levels">
     <div class="topbar">
-      <div id="player-chip"><b id="chip-nick"></b><small id="chip-score"></small></div>
-      <div style="display:flex;gap:8px">
-        <button class="icon-btn" id="btn-lang">EN</button>
-        <button class="icon-btn" id="btn-lb" data-i18n="ranks">🏆 Sıralama</button>
-        <button class="icon-btn" id="btn-switch" data-i18n="switchPlayer">Değiştir</button>
-      </div>
+      <div id="player-chip"><b>Huel<span style="color:var(--accent)">ly</span></b><small id="chip-score"></small></div>
+      <button class="icon-btn" id="btn-lang">EN</button>
     </div>
     <div id="level-grid"></div>
   </div>
@@ -333,16 +309,6 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
     <button class="btn ghost" id="btn-to-levels" data-i18n="levelMap">Seviye haritası</button>
   </div>
 
-  <!-- LEADERBOARD -->
-  <div class="screen" id="screen-lb">
-    <div class="topbar">
-      <button class="icon-btn" id="btn-lb-back" data-i18n="back">← Geri</button>
-      <h2 data-i18n="leaderboard">Sıralama Tablosu</h2>
-      <span style="width:64px"></span>
-    </div>
-    <div id="lb-list"></div>
-  </div>
-
   <!-- CONTINUE (rewarded-ad revive), shown over the game when lives hit 0 -->
   <div id="continue-overlay">
     <h3 data-i18n="continueTitle">Canların bitti!</h3>
@@ -364,13 +330,10 @@ button{font-family:inherit;color:inherit;border:none;background:none;cursor:poin
 const STRINGS = {
   tr: {
     tagline:'Düşen renk kodunu yere inmeden kopyala. Eşleştir — otomatik ateşlensin.',
-    nickPlaceholder:'Takma ad seç',
     start:'Oynamaya başla',
-    nickTooShort:'Takma ad en az 3 karakter olmalı.',
-    ranks:'🏆 Sıralama',
-    switchPlayer:'Değiştir',
     back:'← Geri',
     points:'{n} puan',
+    cardBlocks:'{n} blok',
     admin:'YÖNETİCİ',
     levelN:'Seviye {n}',
     diff_slow:'Yavaş', diff_medium:'Orta', diff_fast:'Hızlı', diff_extreme:'Ekstrem',
@@ -398,9 +361,6 @@ const STRINGS = {
     nextLevel:'Sonraki seviye →',
     playAgain:'Tekrar oyna',
     levelMap:'Seviye haritası',
-    leaderboard:'Sıralama Tablosu',
-    loading:'Yükleniyor…',
-    lbEmpty:'Henüz sıralanan oyuncu yok.<br>Tabloya girmek için bir seviye tamamla!',
     continueTitle:'Canların bitti!',
     continueBody:'Kısa bir reklam izle, +1 canla devam et.',
     continueWatch:'▶ İzle ve devam et',
@@ -408,13 +368,10 @@ const STRINGS = {
   },
   en: {
     tagline:'Copy the falling color code before it lands. Match it — and it fires automatically.',
-    nickPlaceholder:'Pick a nickname',
     start:'Start playing',
-    nickTooShort:'Nickname needs at least 3 characters.',
-    ranks:'🏆 Ranks',
-    switchPlayer:'Switch',
     back:'← Back',
     points:'{n} pts',
+    cardBlocks:'{n} blocks',
     admin:'ADMIN',
     levelN:'Level {n}',
     diff_slow:'Slow', diff_medium:'Medium', diff_fast:'Fast', diff_extreme:'Extreme',
@@ -441,9 +398,6 @@ const STRINGS = {
     nextLevel:'Next level →',
     playAgain:'Play again',
     levelMap:'Level map',
-    leaderboard:'Leaderboard',
-    loading:'Loading…',
-    lbEmpty:'No players ranked yet.<br>Complete a level to get on the board!',
     continueTitle:'Out of lives!',
     continueBody:'Watch a short ad to continue with +1 life.',
     continueWatch:'▶ Watch & continue',
@@ -474,9 +428,7 @@ function applyI18n(){
   });
   // The toggle advertises the language it switches TO, not the current one.
   const other = LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length].toUpperCase();
-  ['btn-lang','btn-lang-signup'].forEach(id => {
-    const b = document.getElementById(id); if (b) b.textContent = other;
-  });
+  ['btn-lang','btn-lang-home'].forEach(id => { const b = $(id); if (b) b.textContent = other; });
 }
 
 /* ============================================================
@@ -500,11 +452,12 @@ const CONFIG = {
   // Falling speed AND points earned are multiplied by the chosen boost.
   SPEED_BOOSTS: [1, 1.5, 2, 3],
 
-  // Per-level scaling
-  // Capped at 7: past that the strip stops testing reactions and just
-  // overruns working memory, which tops out around 7 items.
-  seqLen:    lvl => Math.min(3 + Math.floor((lvl - 1) / 6), 7),        // blocks in the strip: 3 → 7
-  colorCount:(lvl, d) => Math.min(3 + Math.floor((lvl - 1) / 8) + CONFIG.DIFFS[d].extraColors, 7),
+  // Per-level scaling. Blocks step every 4 levels, colours every 5 (offset by 2),
+  // so something changes roughly every other level — each level feels distinct
+  // instead of a long band of identical ones. Both capped at 7 (working-memory
+  // limit / the size of the palette).
+  seqLen:    lvl => Math.min(3 + Math.floor((lvl - 1) / 4), 7),        // blocks: 3 → 7 by level 17
+  colorCount:(lvl, d) => Math.min(3 + Math.floor((lvl + 1) / 5) + CONFIG.DIFFS[d].extraColors, 7),
   levelTime: lvl => 30 + Math.min(lvl, 15),                            // seconds to survive: 31 → 45
 
   // Seconds allowed per block, before the difficulty speed multiplier.
@@ -518,6 +471,13 @@ const CONFIG = {
   // Scoring: (20 + 80 × heightFraction) × diffMult × levelBonus
   points: (heightFrac, lvl, d) =>
     Math.round((20 + 80 * heightFrac) * CONFIG.DIFFS[d].mult * (1 + (lvl - 1) * 0.05)),
+
+  // Conveyor: a continuous stream of identical strips slides down from the top.
+  // The lowest one (nearest the input row) is the active target; the rest are the
+  // next strips on their way down. previews = how many extra strips ride above the
+  // active; gapFrac = vertical spacing (fraction of the playfield); speedFactor
+  // slows the descent a touch so the packed stream stays playable.
+  CONVEYOR: { previews: 3, gapFrac: 0.19, speedFactor: 1.6 },
 };
 
 /* ============================================================
@@ -570,79 +530,29 @@ const store = {
 };
 
 /* ============================================================
-   CLOUD LEADERBOARD (Supabase) — real global ranking.
-   Talks to the REST API directly (no SDK → single-file stays intact).
-   The publishable key is designed to ship in client apps; every write
-   goes through the submit_score() RPC, which only ever RAISES a score,
-   so a tampered client can't lower anyone (including itself).
-   When offline, scores still save locally and sync on the next save.
-   ============================================================ */
-const SUPA = {
-  url: 'https://iokqvjvujdqiaqeeqoat.supabase.co',
-  key: 'sb_publishable_IO5SR1tUNCRHSmIX0yruJw_hfE_vWmp',
-  enabled: true,
-};
-const nickId = nick => nick.toLowerCase().replace(/[^a-z0-9_-]/g,'_');
-
-async function cloudSubmit(nick, total){
-  if (!SUPA.enabled) return;
-  try{
-    await fetch(SUPA.url + '/rest/v1/rpc/submit_score', {
-      method:'POST',
-      headers:{ 'apikey':SUPA.key, 'Authorization':'Bearer '+SUPA.key, 'Content-Type':'application/json' },
-      body: JSON.stringify({ p_id: nickId(nick), p_nick: nick, p_total: total }),
-    });
-  }catch(e){ /* offline — the local copy is already saved, will re-sync next time */ }
-}
-
-async function cloudLeaderboard(limit=50){
-  if (!SUPA.enabled) return null;
-  try{
-    const res = await fetch(SUPA.url + '/rest/v1/leaderboard?select=nick,total&order=total.desc&limit='+limit, {
-      headers:{ 'apikey':SUPA.key, 'Authorization':'Bearer '+SUPA.key },
-    });
-    if (!res.ok) return null;
-    return await res.json();   // [{ nick, total }, ...] already sorted desc
-  }catch(e){ return null; }
-}
-
-/* ============================================================
    STATE
    ============================================================ */
-let player = null;   // { nick, unlocked, best:{ "lvl:diff": score }, boost }
+let player = null;   // { unlocked, best:{ "lvl:diff": score }, boost } — local only
 let G = null;        // active game state
 let pendingLevel = 1;
 let adminMode = false;   // unlocks all levels for testing; admin runs don't save scores
 
 const $ = id => document.getElementById(id);
-const screens = ['signup','levels','diff','game','result','lb'];
+const screens = ['home','levels','diff','game','result'];
 function show(name){
   screens.forEach(s => $('screen-'+s).classList.toggle('active', s===name));
 }
 
 const totalScore = p => Object.values(p.best||{}).reduce((a,b)=>a+b,0);
-const lbKey = nick => 'lb:' + nick.toLowerCase().replace(/[^a-z0-9_-]/g,'_');
 
-async function savePlayer(){
-  await store.set('player', player);
-  await store.set(lbKey(player.nick), { nick: player.nick, total: totalScore(player), t: Date.now() }, true);
-  cloudSubmit(player.nick, totalScore(player));   // fire-and-forget global sync
-}
+/* Progress is saved locally only — no nickname, no server. */
+async function savePlayer(){ await store.set('player', player); }
 
-/* ============================================================
-   SIGN UP
-   ============================================================ */
-$('btn-join').onclick = async () => {
-  const nick = $('nick-input').value.trim();
-  if (nick.length < 3) { $('nick-error').textContent = t('nickTooShort'); return; }
-  player = { nick, unlocked: 1, best: {} };
-  await savePlayer();
-  renderLevels(); show('levels');
-};
-$('nick-input').addEventListener('keydown', e => { if (e.key==='Enter') $('btn-join').click(); });
+/* Home → level map */
+$('btn-play').onclick = () => { renderLevels(); show('levels'); };
 
-/* Admin mode: tap your nickname chip 7 times quickly to toggle.
-   Unlocks every level for testing; admin runs are never saved or ranked. */
+/* Admin mode: tap the Huelly chip 7 times quickly to toggle.
+   Unlocks every level for testing; admin runs are never saved. */
 let adminTaps = 0, adminTimer = null;
 $('player-chip').onclick = () => {
   adminTaps++;
@@ -655,16 +565,10 @@ $('player-chip').onclick = () => {
   }
 };
 
-$('btn-switch').onclick = async () => {
-  await store.delete('player');
-  player = null; $('nick-input').value=''; show('signup');
-};
-
 /* ============================================================
    LEVEL SELECT
    ============================================================ */
 function renderLevels(){
-  $('chip-nick').textContent = player.nick;
   $('chip-score').innerHTML = t('points', { n: totalScore(player).toLocaleString() })
     + (adminMode ? ' · <span id="admin-flag">' + t('admin') + '</span>' : '');
   const grid = $('level-grid'); grid.innerHTML = '';
@@ -674,7 +578,9 @@ function renderLevels(){
     const anyDone = CONFIG.DIFF_ORDER.some(d => player.best[i+':'+d] != null);
     if (i > player.unlocked && !adminMode) b.classList.add('locked');
     if (anyDone) b.classList.add('done');
-    b.innerHTML = i + `<span class="stars">
+    b.innerHTML = i
+      + `<small class="lvl-info">${t('cardBlocks', { n: CONFIG.seqLen(i) })}</small>`
+      + `<span class="stars">
       <i class="s1 ${player.best[i+':slow']!=null?'on':''}"></i>
       <i class="s2 ${player.best[i+':medium']!=null?'on':''}"></i>
       <i class="s3 ${player.best[i+':fast']!=null?'on':''}"></i>
@@ -820,6 +726,7 @@ function startGame(lvl, diff){
     fallTime: CONFIG.fallTime(lvl, diff),
     score: 0,
     target: [], playerArr: [],
+    queue: [],                 // conveyor: [active, ...previews]
     y: 0, maxY: 1,
     running: true, locked: false, lastT: null,
     boost: player.boost || 1,
@@ -829,7 +736,10 @@ function startGame(lvl, diff){
   $('hud-score').textContent = '0';
   $('spd-btn').textContent = G.boost + '×';
   updateLives(); buildInputUI(); show('game');
-  requestAnimationFrame(() => { spawnStrip(); G.lastT = null; requestAnimationFrame(tick); });
+  // Defer one turn so the playfield has measured its size, but use setTimeout,
+  // not rAF — a 0 ms timeout fires even where rAF is paused, so startup never
+  // hangs before the first strip appears.
+  setTimeout(() => { if (!G) return; initConveyor(); startLoop(); }, 0);
 }
 
 function updateLives(){ $('hud-lives').textContent = '❤'.repeat(G.lives) || '—'; }
@@ -858,29 +768,74 @@ function buildInputUI(){
   });
 }
 
-function spawnStrip(){
-  const old = $('target-strip'); if (old) old.remove();
-  // Extreme: the color panel re-arranges itself before every new strip
-  if (CONFIG.DIFFS[G.diff].shuffle){
-    for (let i = G.palette.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i + 1));
-      [G.palette[i], G.palette[j]] = [G.palette[j], G.palette[i]];
-    }
-    buildInputUI();
-  }
-  G.target = Array.from({length:G.seqLen}, () => G.palette[Math.floor(Math.random()*G.palette.length)]);
-  G.playerArr = []; renderPlayerGrid();
-  const strip = document.createElement('div');
-  strip.className='strip'; strip.id='target-strip';
-  G.target.forEach(c => { const cell=document.createElement('div'); cell.className='cell'; cell.style.background=c; strip.appendChild(cell); });
-  $('playfield').appendChild(strip);
-  G.y = -40;
-  G.maxY = $('playfield').clientHeight - 44;   // where the strip "lands"
-  strip.style.top = G.y + 'px';
+/* ---------- conveyor: a continuous stream of falling strips ----------
+   Every strip looks the same and slides down together from the top. The lowest
+   one (nearest the input row) is the active target the player matches; the ones
+   above it are simply the next strips on their way down. Each strip carries its
+   own y, so clearing the lowest just removes it and a fresh strip feeds in at
+   the top — a steady top-to-bottom stream. */
+const pfH = () => $('playfield').clientHeight;
+const conveyorGap = () => pfH() * CONFIG.CONVEYOR.gapFrac;
+const activeY = () => (G.queue[0] ? G.queue[0].y : G.maxY);
+const randTarget = () => Array.from({length:G.seqLen}, () => G.palette[Math.floor(Math.random()*G.palette.length)]);
+
+function makeStrip(target, y){
+  const el = document.createElement('div');
+  el.className = 'strip';
+  target.forEach(c => { const cell=document.createElement('div'); cell.className='cell'; cell.style.background=c; el.appendChild(cell); });
+  el.style.top = y + 'px';
+  $('playfield').appendChild(el);
+  return { target, el, y };
 }
 
+/* Draw each strip at its own y. All strips are full colour; the lowest one (the
+   target you're matching) gets a glow so it's unmistakable, without dimming the
+   others. */
+function renderConveyor(){
+  G.queue.forEach((s, i) => {
+    s.el.style.top = s.y + 'px';
+    s.el.classList.toggle('active', i === 0);
+  });
+  G.y = activeY();                            // keep G.y = active for fire()/scoring
+}
+
+function initConveyor(){
+  [...$('playfield').querySelectorAll('.strip')].forEach(s => s.remove());
+  G.maxY = pfH() - 44;                        // where the active "lands"
+  const gap = conveyorGap();
+  G.queue = [];                              // queue[0] = active (starts at the top)
+  // Active sits at the very top; the rest wait ABOVE it (off-screen) and slide in
+  // one by one with a full gap between them — a spaced-out top-to-bottom stream.
+  for (let i=0; i <= CONFIG.CONVEYOR.previews; i++){
+    G.queue.push(makeStrip(randTarget(), -gap * i));
+  }
+  G.target = G.queue[0].target;
+  G.playerArr = []; renderPlayerGrid();
+  renderConveyor();
+}
+
+/* Clear the lowest strip and feed a fresh one in at the top; the survivors keep
+   falling from where they are, so the stream never jumps. */
+function advanceConveyor(){
+  const gone = G.queue.shift(); if (gone) gone.el.remove();
+  const topY = G.queue.length ? G.queue[G.queue.length-1].y : 0;
+  G.queue.push(makeStrip(randTarget(), topY - conveyorGap()));
+  G.target = G.queue[0].target;
+  G.playerArr = []; renderPlayerGrid();
+  // Extreme: reshuffle the palette buttons for the new active target
+  if (CONFIG.DIFFS[G.diff].shuffle){
+    for (let i = G.palette.length - 1; i > 0; i--){ const j = Math.floor(Math.random()*(i+1)); [G.palette[i],G.palette[j]]=[G.palette[j],G.palette[i]]; }
+    buildInputUI();
+  }
+  renderConveyor();
+}
+
+/* One simulation step. The scheduling lives in startLoop() below — tick() never
+   reschedules itself, so it can be driven by requestAnimationFrame OR by the
+   watchdog timer without ever double-stepping. */
 function tick(t){
   if (!G || !G.running) return;
+  G._lastWall = performance.now();          // watchdog: proof a frame just ran
   if (G.lastT == null) G.lastT = t;
   const dt = Math.min((t - G.lastT)/1000, 0.05);
   G.lastT = t;
@@ -892,14 +847,38 @@ function tick(t){
   $('hud-timer').classList.toggle('low', tl <= 10);
   if (G.timeLeft <= 0) return endGame(true);
 
-  // descend
+  // slide the whole stream down; the lowest touching the floor is a miss
   if (!G.locked){
-    G.y += ($('playfield').clientHeight / G.fallTime) * G.boost * dt;
-    const strip = $('target-strip');
-    if (strip) strip.style.top = G.y + 'px';
-    if (G.y >= G.maxY) stripLanded();
+    const dy = (pfH() / (G.fallTime * CONFIG.CONVEYOR.speedFactor)) * G.boost * dt;
+    G.queue.forEach(s => s.y += dy);
+    renderConveyor();
+    if (activeY() >= G.maxY) stripLanded();
   }
-  requestAnimationFrame(tick);
+}
+
+/* Game-loop driver. requestAnimationFrame gives smooth play when the page is
+   visible, but some embed contexts (the inline chat preview, hidden/offscreen
+   iframes) pause rAF entirely, which used to freeze the game the moment it
+   started — "oynanmıyor". A setInterval watchdog keeps stepping the sim when rAF
+   goes quiet, so the game always runs; when rAF is healthy the 200 ms threshold
+   is never reached and the watchdog stays dormant. */
+let _frameTimer = null;
+function stopLoop(){ if (_frameTimer){ clearInterval(_frameTimer); _frameTimer = null; } }
+function startLoop(){
+  stopLoop();
+  if (!G) return;
+  G.lastT = null;
+  G._lastWall = performance.now();
+  const raf = () => {
+    if (!G || !G.running){ stopLoop(); return; }
+    tick(performance.now());
+    if (G && G.running) requestAnimationFrame(raf);
+  };
+  requestAnimationFrame(raf);
+  _frameTimer = setInterval(() => {
+    if (!G || !G.running){ stopLoop(); return; }
+    if (performance.now() - G._lastWall > 200) tick(performance.now());
+  }, 200);
 }
 
 function stripLanded(){
@@ -912,7 +891,7 @@ function stripLanded(){
     setTimeout(() => offerContinueOrEnd(), 450);
     return;
   }
-  setTimeout(()=>{ if(G && G.running){ spawnStrip(); G.locked=false; } }, 550);
+  setTimeout(()=>{ if(G && G.running){ advanceConveyor(); G.locked=false; } }, 450);
 }
 
 /* Out of lives: offer a rewarded-ad revive if one is ready (once per game),
@@ -930,9 +909,8 @@ function reviveGame(){
   G.reviveUsed = true;
   G.lives = 1; updateLives();
   G.running = true; G.locked = false; G.lastT = null;
-  const s = $('target-strip'); if (s) s.remove();
-  spawnStrip();
-  requestAnimationFrame(tick);
+  initConveyor();
+  startLoop();
 }
 $('btn-continue').onclick = () => {
   $('continue-overlay').classList.remove('show');
@@ -978,6 +956,9 @@ function fire(){
   $('player-grid').classList.add('match-ok');
   beep(660,.07); setTimeout(()=>beep(880,.07),70); setTimeout(()=>beep(1320,.1),140);
 
+  // hide the matched (active) strip while its projectile copy flies up
+  if (G.queue[0]) G.queue[0].el.style.visibility = 'hidden';
+
   // projectile: a copy of the matched strip flies up from the bottom
   const proj = document.createElement('div');
   proj.className='strip'; proj.id='fire-strip';
@@ -997,19 +978,18 @@ function fire(){
   requestAnimationFrame(()=>{ proj.style.top = G.y + 'px'; });
   setTimeout(()=>{
     proj.remove();
-    const strip = $('target-strip'); if (strip) strip.remove();
     const boom=document.createElement('div'); boom.className='boom';
     boom.textContent='+'+pts;
     boom.style.top=Math.max(G.y,10)+'px'; boom.style.left='50%'; boom.style.transform='translateX(-50%)';
     pf.appendChild(boom); setTimeout(()=>boom.remove(),650);
     $('flash').className='green'; setTimeout(()=>$('flash').className='',350);
     $('player-grid').classList.remove('match-ok');
-    if (G && G.running){ spawnStrip(); G.locked=false; }
+    if (G && G.running){ advanceConveyor(); G.locked=false; }
   }, 240);
 }
 
 /* ---------- end / quit ---------- */
-$('btn-quit').onclick = () => { if(G){ G.running=false; G=null; } show('levels'); };
+$('btn-quit').onclick = () => { stopLoop(); if(G){ G.running=false; G=null; } show('levels'); };
 
 /* `survived` = the clock ran out with lives to spare. That alone is not enough
    to clear a level: on Slow the early levels hand out more lives than there are
@@ -1017,6 +997,7 @@ $('btn-quit').onclick = () => { if(G){ G.running=false; G=null; } show('levels')
    Clearing also requires landing at least one match. */
 async function endGame(survived){
   G.running = false;
+  stopLoop();
   $('continue-overlay').classList.remove('show');
   const {lvl, diff, score} = G;
   const key = lvl+':'+diff;
@@ -1063,37 +1044,7 @@ async function endGame(survived){
 $('btn-to-levels').onclick = () => { renderLevels(); show('levels'); };
 
 /* ============================================================
-   LEADERBOARD (shared across all players of this app)
-   ============================================================ */
-$('btn-lb').onclick = async () => {
-  show('lb');
-  const list = $('lb-list');
-  list.innerHTML = '<div class="lb-empty">' + t('loading') + '</div>';
-  // Prefer the real global board; fall back to the local one when offline.
-  let rows = await cloudLeaderboard(50);
-  if (!rows){
-    const keys = await store.list('lb:', true);
-    rows = [];
-    for (const k of keys.slice(0,100)){
-      const v = await store.get(k, true);
-      if (v && v.nick) rows.push(v);
-    }
-    rows.sort((a,b)=>b.total-a.total);
-  }
-  list.innerHTML = rows.length ? '' : '<div class="lb-empty">' + t('lbEmpty') + '</div>';
-  rows.slice(0,50).forEach((r,i)=>{
-    const div = document.createElement('div');
-    div.className = 'lb-row' + (i===0?' top1':'') + (r.nick===player.nick?' me':'');
-    div.innerHTML = `<span class="rank">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</span>
-                     <span class="nick"></span><span class="pts">${r.total.toLocaleString()}</span>`;
-    div.querySelector('.nick').textContent = r.nick;
-    list.appendChild(div);
-  });
-};
-$('btn-lb-back').onclick = () => show('levels');
-
-/* ============================================================
-   BOOT — restore saved player if there is one
+   BOOT — no sign-up: load or create a local player, go to levels
    ============================================================ */
 document.addEventListener('visibilitychange', () => { if (G) G.lastT = null; });
 
@@ -1118,7 +1069,7 @@ function setLang(next){
 
 const toggleLang = () => setLang(LANGS[(LANGS.indexOf(lang) + 1) % LANGS.length]);
 $('btn-lang').onclick = toggleLang;
-$('btn-lang-signup').onclick = toggleLang;
+$('btn-lang-home').onclick = toggleLang;
 
 lang = detectLang();
 applyI18n();
@@ -1126,7 +1077,12 @@ ADS.init();   // no-op in a browser; sets up AdMob in the native app
 
 (async () => {
   const saved = await store.get('player');
-  if (saved && saved.nick){ player = saved; renderLevels(); show('levels'); }
+  player = (saved && typeof saved === 'object') ? saved : { unlocked: 1, best: {} };
+  if (!player.best) player.best = {};
+  if (!player.unlocked) player.unlocked = 1;
+  await store.set('player', player);
+  renderLevels();
+  show('home');
 })();
 </script>
 </body>
