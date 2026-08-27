@@ -86,12 +86,9 @@ before every upload — Play rejects a `versionCode` it has already seen.
 - **Storage** is layered so progress survives everywhere: `window.storage` (Claude
   Artifacts) → `localStorage` (real browsers + Android WebView) → in-memory fallback.
   A published build persists via `localStorage`.
-- **Global leaderboard** runs on Supabase (project `Huelly`, region `eu-central-1`),
-  called directly over the REST API — no SDK, so the single-file build stays intact.
-  All writes go through the `submit_score()` RPC (`SECURITY DEFINER`), which only ever
-  raises a player's score, so a tampered client cannot lower anyone. The publishable
-  key shipped in the client is safe by design; row-level security blocks direct writes.
-  Offline play still saves locally and syncs on the next save.
+- **Fully local, no backend.** There is no nickname, no account, and no online
+  leaderboard; the game never talks to a server of its own. Progress lives only in
+  `localStorage`. (An earlier build had a Supabase leaderboard — it was removed.)
 - The game itself has no runtime dependencies; Capacitor is only the native shell.
 
 ## Roadmap
@@ -100,7 +97,7 @@ before every upload — Play rejects a `versionCode` it has already seen.
 - [x] Turkish + English, auto-detected from the device and switchable in-game
       (add a locale by adding a dictionary to `STRINGS`; nothing else changes)
 - [x] Persistent local storage (works off-Claude / on Android)
-- [x] Real global leaderboard (Supabase)
+- [x] Fully local — nickname and Supabase leaderboard removed
 - [x] Capacitor wrap for Android APK
 - [x] Branding pass (icon, splash, dark system bars)
 - [x] Balance tuning (fall time now scales with sequence length)

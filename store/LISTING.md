@@ -47,16 +47,13 @@ On Extreme the color buttons swap places after every strip — muscle memory won
 ◆ SPEED MULTIPLIER
 Push from 1× to 3× mid-run. The strip falls faster and the points scale with it. How brave are you?
 
-◆ GLOBAL LEADERBOARD
-Your total score goes on the worldwide board. All it takes is a nickname.
-
 ◆ FREE TO PLAY
 Free, no subscriptions, no paywalls. Ads keep it free, and the "watch & continue" rewarded ad is always optional.
 
 ◆ WORKS OFFLINE
-Play without a connection; your progress stays on your device and syncs to the leaderboard when you're back online.
+Play with or without a connection; your progress stays on your device. Fully local — no account, no server.
 
-No account, no email, no permissions to accept. Just pick a nickname and start.
+No account, no email, no permissions to accept. Just tap and play.
 ```
 
 ---
@@ -97,16 +94,13 @@ Ekstrem'de renk butonları her şeritten sonra yer değiştirir — kas hafızan
 ◆ HIZ ÇARPANI
 Oyunun ortasında 1×'ten 3×'e kadar hızlanabilirsin. Şerit daha hızlı düşer, puan da o oranda katlanır. Ne kadar cesursun?
 
-◆ KÜRESEL SIRALAMA
-Topladığın toplam puan dünya sıralamasına yazılır. Tek gereken bir takma ad.
-
 ◆ ÜCRETSİZ
 Ücretsiz, üyelik yok, ödeme duvarı yok. Reklamlar oyunu ücretsiz tutar; "izle ve devam et" ödüllü reklamı her zaman isteğe bağlıdır.
 
 ◆ ÇEVRİMDIŞI ÇALIŞIR
-İnternet olmadan da oynayabilirsin; ilerlemen cihazında saklanır ve bağlandığında sıralamaya senkronlanır.
+İnternetli ya da internetsiz oynayabilirsin; ilerlemen cihazında saklanır. Tamamen yerel — hesap yok, sunucu yok.
 
-Hesap açman, e-posta vermen veya izin kabul etmen gerekmiyor. Sadece bir takma ad seç ve başla.
+Hesap açman, e-posta vermen veya izin kabul etmen gerekmiyor. Sadece dokun ve başla.
 ```
 
 ---
@@ -129,17 +123,17 @@ Hesap açman, e-posta vermen veya izin kabul etmen gerekmiyor. Sadece bir takma 
 
 | Soru | Cevap |
 |------|-------|
-| Veri topluyor/paylaşıyor mu? | **Evet** |
-| Takma ad | Kişisel bilgiler → **Kullanıcı kimlikleri** · toplanır · zorunlu · Uygulama işlevselliği |
-| Toplam skor | Uygulama etkinliği → **Uygulama işlemleri** · toplanır · zorunlu · Uygulama işlevselliği |
+| Veri topluyor/paylaşıyor mu? | **Evet** (yalnızca reklam kimliği) |
 | **Reklam kimliği (AdMob)** | Cihaz veya diğer kimlikler → **Cihaz kimlikleri** · toplanır **ve paylaşılır** · Reklamlar/pazarlama + Analiz |
 | Aktarım şifreli mi? | **Evet** (HTTPS) |
 | Silme talebi | **Evet** — https://tahacimen.github.io/Huelly/ |
 | 3. tarafla paylaşım | **Evet** — reklam kimliği/verisi Google (AdMob) ile |
 
-> Notlar: (1) takma ad sıralama tablosunda herkese açıktır. (2) AdMob'un topladığı
-> reklam verisi için Google'ın kendi beyanları geçerlidir; "Cihaz kimlikleri"ni
-> reklam amaçlı toplanan+paylaşılan olarak işaretlemek AdMob için standarttır.
+> Notlar: (1) Oyun kendisi hiçbir veri toplamaz — takma ad, skor veya sıralama yoktur;
+> ilerleme yalnızca cihazda tutulur. Beyan edilen tek veri AdMob'un reklam kimliğidir.
+> (2) AdMob'un topladığı reklam verisi için Google'ın kendi beyanları geçerlidir;
+> "Cihaz kimlikleri"ni reklam amaçlı toplanan+paylaşılan olarak işaretlemek AdMob için
+> standarttır.
 
 ## Gizlilik politikası URL'si
 
