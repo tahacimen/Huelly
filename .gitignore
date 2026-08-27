@@ -3,3 +3,11 @@ node_modules/
 *.log
 dist/
 .env
+
+# IDE / editor project files (IntelliJ / Android Studio)
+.idea/
+*.iml
+
+# Capacitor-generated Gradle files (recreated by `npx cap sync`)
+android/app/capacitor.build.gradle
+android/capacitor.settings.gradle
